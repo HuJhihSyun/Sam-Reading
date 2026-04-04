@@ -1,0 +1,75 @@
+@import url('https://fonts.googleapis.com/css2?family=Noto+Serif+TC:wght@300;400;500;700&family=Playfair+Display:ital,wght@0,400;0,600;1,400&display=swap');
+@import "tailwindcss";
+
+@theme {
+  /* Petal — 鵝黃奶油 + 淡粉玫瑰 */
+  --color-petal-50:  #fdfaf2;   /* 暖象牙白 */
+  --color-petal-100: #f8f2e2;   /* 奶油鵝黃 */
+  --color-petal-200: #f0e3cc;   /* 淡奶茶 */
+  --color-petal-300: #e4cdb8;   /* 暖米色 */
+  --color-petal-400: #d4ad98;   /* 粉膚色 */
+  --color-petal-500: #be8c7c;   /* 霧玫瑰 */
+  --color-petal-600: #a06e60;   /* 深玫瑰 */
+  --color-petal-700: #7e5248;   /* 玫瑰棕 */
+  --color-petal-800: #5c3830;   /* 深棕 */
+  --color-petal-900: #3c2218;   /* 近黑棕 */
+
+  /* Mauve — 暖棕色文字系 */
+  --color-mauve-50:  #faf8f4;
+  --color-mauve-100: #f3ede3;
+  --color-mauve-200: #e6d8c5;
+  --color-mauve-300: #d0bca5;
+  --color-mauve-400: #b09882;
+  --color-mauve-500: #907862;
+  --color-mauve-600: #725c4a;
+  --color-mauve-700: #584438;
+  --color-mauve-800: #3c2e26;
+  --color-mauve-900: #281e16;
+
+  /* Fonts */
+  --font-serif: 'Noto Serif TC', Georgia, serif;
+  --font-display: 'Playfair Display', Georgia, serif;
+  --font-sans: 'Noto Serif TC', Georgia, serif;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  font-family: var(--font-serif);
+  color: #3c2e26;
+  background-color: #fdfaf2;
+}
+
+::selection {
+  background-color: #f0e3cc;
+  color: #3c2e26;
+}
+
+::-webkit-scrollbar {
+  width: 5px;
+}
+::-webkit-scrollbar-track {
+  background: #fdfaf2;
+}
+::-webkit-scrollbar-thumb {
+  background: #e4cdb8;
+  border-radius: 999px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #d4ad98;
+}
+
+.page-enter-active,
+.page-leave-active {
+  transition: opacity 0.25s ease, transform 0.25s ease;
+}
+.page-enter-from {
+  opacity: 0;
+  transform: translateY(8px);
+}
+.page-leave-to {
+  opacity: 0;
+  transform: translateY(-8px);
+}

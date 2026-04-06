@@ -100,7 +100,7 @@
 
     <!-- Article list -->
     <div class="px-10 pb-12">
-      <TransitionGroup name="list" tag="div" class="space-y-6 mt-4">
+      <TransitionGroup name="list" tag="div" class="space-y-4 mt-4">
         <NuxtLink
           v-for="article in filtered"
           :key="article.slug"

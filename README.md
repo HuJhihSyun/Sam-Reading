@@ -6,6 +6,44 @@
 * Locally preview production build with `pnpm preview`
 * Check out the [deployment documentation](https://nuxt.com/docs/getting-started/deployment) for more information.
 
+---
+
 # Web Reference
 * https://81-web.com/[https://81-web.com/]
 * https://takafumisenda.com/top[https://takafumisenda.com/top]
+* sam_readingtw[https://www.instagram.com/sam_readingtw/]
+
+---
+
+# Technical 套件或技術
+
+### Nuxt Svgo Loader
+* [Nuxt Svgo Loader](https://www.npmjs.com/package/nuxt-svgo-loader)
+* SVG ICON Resource [Lucide](https://lucide.dev/)
+
+### TailwindCss v3
+[TailwindCss](https://v3.tailwindcss.com/docs/installation) 設定 extend(screens、colors、backgroundImage)、darkMode
+assets/css/main.css 設定全域顏色 (對有暗色切換網站專案較適合)
+
+### vue3 + TypeScript With ESLint + Prettier
+[ESLint + Prettier](https://juejin.cn/post/7220606022787022906)
+
+1. Install eslint `pnpm i -D eslint eslint-plugin-vue @typescript-eslint/parser @typescript-eslint/eslint-plugin`
+2. Install prettier `pnpm i -D prettier eslint-config-prettier eslint-plugin-prettier`
+3. Add file .eslintrc.cjs
+4. Add file .prettierrc.cjs
+5. Add file .vscode/settings.json
+6. Add file .editorconfig
+
+### VueUse
+[VueUse](https://vueuse.org/guide/)
+* useWindowSize: 監聽視窗尺寸變化
+* useResizeObserver: 監聽元素尺寸變化
+* useVModel: 組件的雙向綁定通常透過 v-model 來完成，更清楚地控制父子組件之間的資料流，並能根據需求對資料進行轉換或處理。
+* useState: 輕量級全域狀態管理工具，底層是透過 Nuxt 提供的 useState API 封裝。用途類似小型應用中管理全域變數，不需額外像 Vuex、Pinia 完整的狀態管理框架
+* [useScroll](https://vueuse.org/core/useScroll/): x 值 / y 值 / isScrolling 滑動中 / directions 方向 (left/right/top/bottom)
+* [useLocalStorage](https://vueuse.org/core/useLocalStorage/): ex.username = useLocalStorage('username', '預設名稱')
+* onClickOutside: 點擊 target 以外區域觸發 callback 函式
+
+### .env 環境變數
+nuxt.config.ts runtimeConfig => page: useRuntimeConfig()

@@ -10,5 +10,5 @@ export default defineNuxtConfig({
     plugins: [tailwindcss()]
   },
 
-  modules: []
+  modules: ['nuxt-svgo-loader']
 })

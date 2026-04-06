@@ -5,6 +5,7 @@
   const route = useRoute()
 
   const navItems = [
+    { path: '/', label: '首頁', icon: markRaw(PencilSvg), text: 'Home' },
     { path: '/about', label: '關於作者', icon: markRaw(PencilSvg), text: 'About me' },
     { path: '/articles', label: '全部文章', icon: markRaw(PencilSvg), text: 'Articles' },
     { path: '/favorites', label: '喜歡的事物', icon: markRaw(PencilSvg), text: 'Favorites' },

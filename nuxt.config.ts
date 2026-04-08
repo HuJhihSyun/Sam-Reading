@@ -24,5 +24,9 @@ export default defineNuxtConfig({
     plugins: [tailwindcss()]
   },
 
-  modules: ['nuxt-svgo-loader']
+  modules: ['nuxt-svgo-loader'],
+
+  nitro: {
+    plugins: ['~/server/db/index.js']
+  }
 })

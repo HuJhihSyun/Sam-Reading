@@ -1,16 +1,22 @@
 <script setup lang="ts">
-const route = useRoute()
+  const route = useRoute()
 
-const articles: Record<string, {
-  title: string; date: string; tags: string[]
-  readTime: string; content: string
-}> = {
-  'morning-rituals': {
-    title: '清晨的儀式感',
-    date: '2026-03-20',
-    tags: ['生活', '日常'],
-    readTime: '3 分鐘',
-    content: `
+  const articles: Record<
+    string,
+    {
+      title: string
+      date: string
+      tags: string[]
+      readTime: string
+      content: string
+    }
+  > = {
+    'morning-rituals': {
+      title: '清晨的儀式感',
+      date: '2026-03-20',
+      tags: ['生活', '日常'],
+      readTime: '3 分鐘',
+      content: `
 每天清晨，我都會給自己留出一段靜謐的時光。
 
 泡一杯熱茶，翻開日記，讓思緒在文字間慢慢甦醒。這個習慣從大學時期就開始了，那時候宿舍裡總是吵鬧，只有早晨六點前才是屬於自己的安靜。
@@ -22,14 +28,14 @@ const articles: Record<string, {
 有時候日記裡只有幾行字，「今天天氣很好，陽光從窗縫照進來」，就這樣，也足夠了。
 
 儀式感不需要複雜，它只是一個提醒：你在好好生活。
-    `,
-  },
-  'reading-notes-2025': {
-    title: '2025 年閱讀回顧',
-    date: '2026-01-01',
-    tags: ['閱讀', '書單'],
-    readTime: '6 分鐘',
-    content: `
+    `
+    },
+    'reading-notes-2025': {
+      title: '2025 年閱讀回顧',
+      date: '2026-01-01',
+      tags: ['閱讀', '書單'],
+      readTime: '6 分鐘',
+      content: `
 這一年讀了三十二本書。
 
 說起來有點不可思議，因為年初的我幾乎已經和閱讀漸行漸遠了。手機把碎片時間切割得乾乾淨淨，等到想靜下來看書，腦袋已經習慣了快速切換的節奏，一頁都讀不進去。
@@ -49,31 +55,45 @@ const articles: Record<string, {
 **《82年生的金智英》**——不需要多說什麼，讀的時候我哭了好幾次。
 
 2026 年，繼續讀下去。
-    `,
-  },
-}
+    `
+    }
+  }
 
-const slug = route.params.slug as string
-const article = articles[slug]
+  const slug = route.params.slug as string
+  const article = articles[slug]
 
-if (!article) {
-  navigateTo('/articles', { replace: true })
-}
+  if (!article) {
+    navigateTo('/articles', { replace: true })
+  }
 
-useHead({ title: article ? `${article.title} — Sam's World` : 'Sam\'s World' })
+  const pageTitle = article ? `${article.title} — Sam's World` : "Sam's World"
+  const pageDescription = article
+    ? article.content.trim().replace(/\*\*/g, '').slice(0, 120).trimEnd() + '…'
+    : '珊珊書評的文章'
 
-const formattedContent = computed(() =>
-  article?.content
-    .trim()
-    .split('\n\n')
-    .map(p => p.trim())
-    .filter(Boolean) ?? []
-)
+  useSeoMeta({
+    title: pageTitle,
+    description: pageDescription,
+    ogTitle: pageTitle,
+    ogDescription: pageDescription,
+    ogType: 'article',
+    twitterCard: 'summary',
+    twitterTitle: pageTitle,
+    twitterDescription: pageDescription
+  })
+
+  const formattedContent = computed(
+    () =>
+      article?.content
+        .trim()
+        .split('\n\n')
+        .map((p) => p.trim())
+        .filter(Boolean) ?? []
+  )
 </script>
 
 <template>
   <div v-if="article" class="min-h-full">
-
     <!-- Header canvas -->
     <div class="relative h-56 overflow-hidden bg-petal-50">
       <canvas-sparkles class="absolute inset-0" />
@@ -85,7 +105,8 @@ const formattedContent = computed(() =>
               v-for="tag in article.tags"
               :key="tag"
               class="text-xs bg-white/60 text-petal-500 px-3 py-0.5 rounded-full border border-petal-100"
-            >{{ tag }}</span>
+              >{{ tag }}</span
+            >
           </div>
           <h1 class="font-display text-3xl text-mauve-800 leading-tight">{{ article.title }}</h1>
           <div class="flex items-center gap-3 mt-2 text-xs text-mauve-400">
@@ -127,6 +148,5 @@ const formattedContent = computed(() =>
       </div>
       <p class="text-center text-xs text-mauve-300 tracking-widest">感謝閱讀</p>
     </article>
-
   </div>
 </template>

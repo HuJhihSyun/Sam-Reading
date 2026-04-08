@@ -1,6 +1,15 @@
 <script setup lang="ts">
   definePageMeta({ layout: 'default' })
-  useHead({ title: "珊珊書評 — Sam's World" })
+  useSeoMeta({
+    title: "珊珊書評 — Sam's World",
+    description: '珊珊書評是 Samantha 的個人書寫空間，記錄閱讀感悟、生活片段與日常中值得被留下的每一刻。',
+    ogTitle: "珊珊書評 — Sam's World",
+    ogDescription: '珊珊書評是 Samantha 的個人書寫空間，記錄閱讀感悟、生活片段與日常中值得被留下的每一刻。',
+    ogType: 'website',
+    twitterCard: 'summary',
+    twitterTitle: "珊珊書評 — Sam's World",
+    twitterDescription: '珊珊書評是 Samantha 的個人書寫空間，記錄閱讀感悟、生活片段與日常中值得被留下的每一刻。'
+  })
 
   // ── Brush path ────────────────────────────────────────────────
   const brushD =

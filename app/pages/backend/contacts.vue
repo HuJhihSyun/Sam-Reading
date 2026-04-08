@@ -1,6 +1,7 @@
 <script setup lang="ts">
   definePageMeta({ layout: 'backend' })
   useHead({ title: '聯絡訊息 — 後台管理' })
+  useSeoMeta({ robots: 'noindex, nofollow' })
 
   import { useContactData, type ContactMessage } from '@/composables/useContactData'
 
@@ -15,17 +16,17 @@
   })
 
   const filtered = computed(() => {
-    let list = filterUnread.value ? messages.value.filter(m => !m.read) : messages.value
+    let list = filterUnread.value ? messages.value.filter((m) => !m.read) : messages.value
     return list.sort((a, b) => new Date(b.receivedAt).getTime() - new Date(a.receivedAt).getTime())
   })
 
-  const unreadCount = computed(() => messages.value.filter(m => !m.read).length)
+  const unreadCount = computed(() => messages.value.filter((m) => !m.read).length)
 
   function openMessage(msg: ContactMessage) {
     selected.value = msg
     if (!msg.read) {
       markRead(msg.id)
-      const target = messages.value.find(m => m.id === msg.id)
+      const target = messages.value.find((m) => m.id === msg.id)
       if (target) target.read = true
     }
   }
@@ -44,8 +45,11 @@
 
   function formatDate(d: string) {
     return new Date(d).toLocaleString('zh-TW', {
-      year: 'numeric', month: '2-digit', day: '2-digit',
-      hour: '2-digit', minute: '2-digit'
+      year: 'numeric',
+      month: '2-digit',
+      day: '2-digit',
+      hour: '2-digit',
+      minute: '2-digit'
     })
   }
 </script>
@@ -78,9 +82,7 @@
     <div class="grid grid-cols-5 gap-6">
       <!-- Message list -->
       <div class="col-span-2 space-y-2">
-        <div v-if="filtered.length === 0" class="py-10 text-center text-sm text-neutral-600">
-          沒有訊息
-        </div>
+        <div v-if="filtered.length === 0" class="py-10 text-center text-sm text-neutral-600">沒有訊息</div>
         <button
           v-for="msg in filtered"
           :key="msg.id"
@@ -93,10 +95,7 @@
           @click="openMessage(msg)"
         >
           <div class="flex items-center gap-2 mb-1.5">
-            <span
-              v-if="!msg.read"
-              class="w-1.5 h-1.5 rounded-full bg-rose-400 shrink-0"
-            />
+            <span v-if="!msg.read" class="w-1.5 h-1.5 rounded-full bg-rose-400 shrink-0" />
             <span class="text-sm font-medium text-neutral-200 flex-1 truncate">{{ msg.name }}</span>
             <span class="text-xs text-neutral-600 shrink-0">
               {{ new Date(msg.receivedAt).toLocaleDateString('zh-TW', { month: 'short', day: 'numeric' }) }}
@@ -117,14 +116,14 @@
           選擇一則訊息查看詳情
         </div>
 
-        <div
-          v-else
-          class="bg-neutral-800/40 border border-neutral-700 rounded-xl p-6"
-        >
+        <div v-else class="bg-neutral-800/40 border border-neutral-700 rounded-xl p-6">
           <div class="flex items-start justify-between mb-5">
             <div>
               <h2 class="text-base font-medium text-white">{{ selected.name }}</h2>
-              <a :href="`mailto:${selected.email}`" class="text-xs text-neutral-500 hover:text-petal-400 transition-colors mt-0.5 block">
+              <a
+                :href="`mailto:${selected.email}`"
+                class="text-xs text-neutral-500 hover:text-petal-400 transition-colors mt-0.5 block"
+              >
                 {{ selected.email }}
               </a>
             </div>
@@ -165,9 +164,7 @@
         >
           <div class="bg-neutral-800 border border-neutral-700 rounded-xl p-6 w-80 shadow-xl">
             <h3 class="text-sm font-medium text-white mb-2">確認刪除</h3>
-            <p class="text-xs text-neutral-400 mb-5 leading-5">
-              確定要刪除來自「{{ deleteTarget.name }}」的訊息嗎？
-            </p>
+            <p class="text-xs text-neutral-400 mb-5 leading-5">確定要刪除來自「{{ deleteTarget.name }}」的訊息嗎？</p>
             <div class="flex gap-3 justify-end">
               <button
                 class="px-4 py-1.5 text-xs text-neutral-400 hover:text-white border border-neutral-600 rounded-lg transition-colors"
@@ -190,6 +187,12 @@
 </template>
 
 <style scoped>
-.fade-enter-active, .fade-leave-active { transition: opacity 0.15s ease; }
-.fade-enter-from, .fade-leave-to { opacity: 0; }
+  .fade-enter-active,
+  .fade-leave-active {
+    transition: opacity 0.15s ease;
+  }
+  .fade-enter-from,
+  .fade-leave-to {
+    opacity: 0;
+  }
 </style>

@@ -1,6 +1,7 @@
 <script setup lang="ts">
   definePageMeta({ layout: 'backend' })
   useHead({ title: '關於作者編輯 — 後台管理' })
+  useSeoMeta({ robots: 'noindex, nofollow' })
 
   import { useAboutData, type AboutData } from '@/composables/useAboutData'
 
@@ -33,13 +34,18 @@
   async function doSave() {
     if (!data.value) return
     saving.value = true
-    await new Promise(r => setTimeout(r, 250))
+    await new Promise((r) => setTimeout(r, 250))
     // Parse interests
-    data.value.interests = interestsInput.value.split(/[,，\s]+/).map(t => t.trim()).filter(Boolean)
+    data.value.interests = interestsInput.value
+      .split(/[,，\s]+/)
+      .map((t) => t.trim())
+      .filter(Boolean)
     save(data.value)
     saving.value = false
     saved.value = true
-    setTimeout(() => { saved.value = false }, 2000)
+    setTimeout(() => {
+      saved.value = false
+    }, 2000)
   }
 </script>
 
@@ -50,7 +56,9 @@
         <h1 class="text-xl font-semibold text-white mb-1">關於作者</h1>
         <p class="text-sm text-neutral-500">編輯關於頁面的文字內容</p>
       </div>
-      <a href="/about" target="_blank" class="text-xs text-neutral-500 hover:text-neutral-300 transition-colors">在前台查看 →</a>
+      <a href="/about" target="_blank" class="text-xs text-neutral-500 hover:text-neutral-300 transition-colors"
+        >在前台查看 →</a
+      >
     </div>
 
     <div v-if="data" class="space-y-8">
@@ -158,7 +166,10 @@
         <!-- Preview -->
         <div class="flex flex-wrap gap-2 mt-3">
           <span
-            v-for="tag in interestsInput.split(/[,，\s]+/).map(t => t.trim()).filter(Boolean)"
+            v-for="tag in interestsInput
+              .split(/[,，\s]+/)
+              .map((t) => t.trim())
+              .filter(Boolean)"
             :key="tag"
             class="px-2 py-0.5 text-xs bg-neutral-700 text-neutral-300 rounded-full"
           >

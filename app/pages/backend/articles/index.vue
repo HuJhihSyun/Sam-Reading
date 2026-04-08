@@ -1,6 +1,7 @@
 <script setup lang="ts">
   definePageMeta({ layout: 'backend' })
   useHead({ title: '文章管理 — 後台管理' })
+  useSeoMeta({ robots: 'noindex, nofollow' })
 
   import { useArticleData, type Article } from '@/composables/useArticleData'
 
@@ -16,10 +17,10 @@
 
   const filtered = computed(() => {
     let list = articles.value
-    if (filterStatus.value !== 'all') list = list.filter(a => a.status === filterStatus.value)
+    if (filterStatus.value !== 'all') list = list.filter((a) => a.status === filterStatus.value)
     if (searchQuery.value.trim()) {
       const q = searchQuery.value.trim().toLowerCase()
-      list = list.filter(a => a.title.toLowerCase().includes(q) || a.tags.some(t => t.toLowerCase().includes(q)))
+      list = list.filter((a) => a.title.toLowerCase().includes(q) || a.tags.some((t) => t.toLowerCase().includes(q)))
     }
     return list.sort((a, b) => new Date(b.updatedAt).getTime() - new Date(a.updatedAt).getTime())
   })
@@ -62,7 +63,11 @@
     <div class="flex items-center gap-4 mb-6">
       <div class="flex gap-1">
         <button
-          v-for="opt in [{ value: 'all', label: '全部' }, { value: 'published', label: '已發布' }, { value: 'draft', label: '草稿' }]"
+          v-for="opt in [
+            { value: 'all', label: '全部' },
+            { value: 'published', label: '已發布' },
+            { value: 'draft', label: '草稿' }
+          ]"
           :key="opt.value"
           class="px-3 py-1.5 rounded-md text-xs transition-colors"
           :class="filterStatus === opt.value ? 'bg-neutral-700 text-white' : 'text-neutral-500 hover:text-neutral-300'"
@@ -110,7 +115,11 @@
             <td class="px-5 py-3.5">
               <span
                 class="text-[10px] px-2 py-0.5 rounded-full"
-                :class="article.status === 'published' ? 'bg-emerald-900/50 text-emerald-400' : 'bg-amber-900/50 text-amber-400'"
+                :class="
+                  article.status === 'published'
+                    ? 'bg-emerald-900/50 text-emerald-400'
+                    : 'bg-amber-900/50 text-amber-400'
+                "
               >
                 {{ article.status === 'published' ? '已發布' : '草稿' }}
               </span>
@@ -187,6 +196,12 @@
 </template>
 
 <style scoped>
-.fade-enter-active, .fade-leave-active { transition: opacity 0.15s ease; }
-.fade-enter-from, .fade-leave-to { opacity: 0; }
+  .fade-enter-active,
+  .fade-leave-active {
+    transition: opacity 0.15s ease;
+  }
+  .fade-enter-from,
+  .fade-leave-to {
+    opacity: 0;
+  }
 </style>

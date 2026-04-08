@@ -1,5 +1,14 @@
 <script setup lang="ts">
-  useHead({ title: "喜歡的事物 — Sam's World" })
+  useSeoMeta({
+    title: "喜歡的事物 — Sam's World",
+    description: 'Samantha 的收藏清單：最愛的書、喜歡的音樂、生活中的小確幸，以及那些想去的地方。',
+    ogTitle: "喜歡的事物 — Sam's World",
+    ogDescription: 'Samantha 的收藏清單：最愛的書、喜歡的音樂、生活中的小確幸，以及那些想去的地方。',
+    ogType: 'website',
+    twitterCard: 'summary',
+    twitterTitle: "喜歡的事物 — Sam's World",
+    twitterDescription: 'Samantha 的收藏清單：最愛的書、喜歡的音樂、生活中的小確幸，以及那些想去的地方。'
+  })
 
   const categories = [
     {

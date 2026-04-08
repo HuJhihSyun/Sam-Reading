@@ -1,6 +1,7 @@
 <script setup lang="ts">
   definePageMeta({ layout: 'backend' })
   useHead({ title: 'Dashboard — 後台管理' })
+  useSeoMeta({ robots: 'noindex, nofollow' })
 
   import { useArticleData } from '@/composables/useArticleData'
   import { useContactData } from '@/composables/useContactData'
@@ -18,19 +19,15 @@
     unread.value = unreadCount()
   })
 
-  const publishedCount = computed(() => articles.value.filter(a => a.status === 'published').length)
-  const draftCount = computed(() => articles.value.filter(a => a.status === 'draft').length)
+  const publishedCount = computed(() => articles.value.filter((a) => a.status === 'published').length)
+  const draftCount = computed(() => articles.value.filter((a) => a.status === 'draft').length)
 
   const recentArticles = computed(() =>
-    [...articles.value]
-      .sort((a, b) => new Date(b.updatedAt).getTime() - new Date(a.updatedAt).getTime())
-      .slice(0, 5)
+    [...articles.value].sort((a, b) => new Date(b.updatedAt).getTime() - new Date(a.updatedAt).getTime()).slice(0, 5)
   )
 
   const recentContacts = computed(() =>
-    [...contacts.value]
-      .sort((a, b) => new Date(b.receivedAt).getTime() - new Date(a.receivedAt).getTime())
-      .slice(0, 3)
+    [...contacts.value].sort((a, b) => new Date(b.receivedAt).getTime() - new Date(a.receivedAt).getTime()).slice(0, 3)
   )
 
   function formatDate(d: string) {
@@ -69,17 +66,17 @@
       <div class="col-span-3 bg-neutral-800/40 border border-neutral-700 rounded-xl p-6">
         <div class="flex items-center justify-between mb-5">
           <h2 class="text-sm font-medium text-neutral-300">最近文章</h2>
-          <NuxtLink to="/backend/articles" class="text-xs text-neutral-500 hover:text-neutral-300 transition-colors">查看全部 →</NuxtLink>
+          <NuxtLink to="/backend/articles" class="text-xs text-neutral-500 hover:text-neutral-300 transition-colors"
+            >查看全部 →</NuxtLink
+          >
         </div>
         <ul class="space-y-3">
-          <li
-            v-for="article in recentArticles"
-            :key="article.id"
-            class="flex items-center gap-3 group"
-          >
+          <li v-for="article in recentArticles" :key="article.id" class="flex items-center gap-3 group">
             <span
               class="text-[10px] px-1.5 py-0.5 rounded"
-              :class="article.status === 'published' ? 'bg-emerald-900/50 text-emerald-400' : 'bg-amber-900/50 text-amber-400'"
+              :class="
+                article.status === 'published' ? 'bg-emerald-900/50 text-emerald-400' : 'bg-amber-900/50 text-amber-400'
+              "
             >
               {{ article.status === 'published' ? '已發布' : '草稿' }}
             </span>
@@ -104,7 +101,9 @@
       <div class="col-span-2 bg-neutral-800/40 border border-neutral-700 rounded-xl p-6">
         <div class="flex items-center justify-between mb-5">
           <h2 class="text-sm font-medium text-neutral-300">最新訊息</h2>
-          <NuxtLink to="/backend/contacts" class="text-xs text-neutral-500 hover:text-neutral-300 transition-colors">查看全部 →</NuxtLink>
+          <NuxtLink to="/backend/contacts" class="text-xs text-neutral-500 hover:text-neutral-300 transition-colors"
+            >查看全部 →</NuxtLink
+          >
         </div>
         <ul class="space-y-4">
           <li
@@ -113,10 +112,7 @@
             class="border-b border-neutral-700/50 pb-4 last:border-0 last:pb-0"
           >
             <div class="flex items-center gap-2 mb-1">
-              <span
-                v-if="!msg.read"
-                class="w-1.5 h-1.5 rounded-full bg-rose-400 shrink-0"
-              />
+              <span v-if="!msg.read" class="w-1.5 h-1.5 rounded-full bg-rose-400 shrink-0" />
               <span class="text-xs font-medium text-neutral-300">{{ msg.name }}</span>
               <span class="text-xs text-neutral-600 ml-auto">{{ formatDate(msg.receivedAt) }}</span>
             </div>

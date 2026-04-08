@@ -1,5 +1,7 @@
 <script setup lang="ts">
   definePageMeta({ layout: 'backend' })
+  useHead({ title: '編輯文章 — 後台管理' })
+  useSeoMeta({ robots: 'noindex, nofollow' })
 
   import { useArticleData, type Article } from '@/composables/useArticleData'
 
@@ -42,7 +44,7 @@
   const errors = reactive<Record<string, string>>({})
 
   function validate(): boolean {
-    Object.keys(errors).forEach(k => delete errors[k])
+    Object.keys(errors).forEach((k) => delete errors[k])
     if (!form.title.trim()) errors.title = '請填寫文章標題'
     if (!form.publishDate) errors.publishDate = '請選擇上架日期'
     return Object.keys(errors).length === 0
@@ -51,8 +53,11 @@
   async function save() {
     if (!validate() || !article.value) return
     saving.value = true
-    await new Promise(r => setTimeout(r, 300))
-    const tags = form.tags.split(/[,，\s]+/).map(t => t.trim()).filter(Boolean)
+    await new Promise((r) => setTimeout(r, 300))
+    const tags = form.tags
+      .split(/[,，\s]+/)
+      .map((t) => t.trim())
+      .filter(Boolean)
     const updated = update(article.value.id, {
       title: form.title,
       publishDate: form.publishDate,
@@ -64,7 +69,9 @@
     if (updated) article.value = updated
     saving.value = false
     saved.value = true
-    setTimeout(() => { saved.value = false }, 2000)
+    setTimeout(() => {
+      saved.value = false
+    }, 2000)
   }
 </script>
 
@@ -72,12 +79,16 @@
   <div class="max-w-3xl">
     <!-- Header -->
     <div class="flex items-center gap-4 mb-8">
-      <NuxtLink to="/backend/articles" class="text-neutral-500 hover:text-neutral-300 transition-colors text-sm">← 返回列表</NuxtLink>
+      <NuxtLink to="/backend/articles" class="text-neutral-500 hover:text-neutral-300 transition-colors text-sm"
+        >← 返回列表</NuxtLink
+      >
       <h1 class="text-xl font-semibold text-white">編輯文章</h1>
       <span
         v-if="article"
         class="ml-2 text-[10px] px-2 py-0.5 rounded-full"
-        :class="article.status === 'published' ? 'bg-emerald-900/50 text-emerald-400' : 'bg-amber-900/50 text-amber-400'"
+        :class="
+          article.status === 'published' ? 'bg-emerald-900/50 text-emerald-400' : 'bg-amber-900/50 text-amber-400'
+        "
       >
         {{ article.status === 'published' ? '已發布' : '草稿' }}
       </span>
@@ -126,7 +137,9 @@
 
       <!-- Tags -->
       <div>
-        <label class="block text-xs text-neutral-400 mb-2 tracking-widest uppercase">標籤 <span class="normal-case text-neutral-600">（用逗號或空白分隔）</span></label>
+        <label class="block text-xs text-neutral-400 mb-2 tracking-widest uppercase"
+          >標籤 <span class="normal-case text-neutral-600">（用逗號或空白分隔）</span></label
+        >
         <input
           v-model="form.tags"
           type="text"
@@ -164,7 +177,11 @@
           <span v-else-if="saved">✓ 已儲存</span>
           <span v-else>儲存變更</span>
         </button>
-        <NuxtLink to="/backend/articles" class="px-4 py-2.5 text-sm text-neutral-500 hover:text-neutral-300 transition-colors">取消</NuxtLink>
+        <NuxtLink
+          to="/backend/articles"
+          class="px-4 py-2.5 text-sm text-neutral-500 hover:text-neutral-300 transition-colors"
+          >取消</NuxtLink
+        >
         <NuxtLink
           v-if="article"
           :to="`/articles/${article.slug}`"

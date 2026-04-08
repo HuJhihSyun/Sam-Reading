@@ -1,5 +1,14 @@
 <script setup lang="ts">
-  useHead({ title: "關於作者 — Samantha's World" })
+  useSeoMeta({
+    title: "關於作者 — Sam's World",
+    description: '認識 Samantha——一個在島嶼盆地生活、在文字與閱讀中尋找自我，喜歡兔毛與冷泡茶的人。',
+    ogTitle: "關於作者 — Sam's World",
+    ogDescription: '認識 Samantha——一個在島嶼盆地生活、在文字與閱讀中尋找自我，喜歡兔毛與冷泡茶的人。',
+    ogType: 'profile',
+    twitterCard: 'summary',
+    twitterTitle: "關於作者 — Sam's World",
+    twitterDescription: '認識 Samantha——一個在島嶼盆地生活、在文字與閱讀中尋找自我，喜歡兔毛與冷泡茶的人。'
+  })
 
   const infoCards = [
     { label: 'Location', value: '在島嶼的核心盆地，與環抱的群山一起守候這座多雨的城' },

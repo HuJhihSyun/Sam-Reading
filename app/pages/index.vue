@@ -11,27 +11,14 @@
     twitterDescription: '珊珊書評是 Samantha 的個人書寫空間，記錄閱讀感悟、生活片段與日常中值得被留下的每一刻。'
   })
 
-  // ── Brush path ────────────────────────────────────────────────
-  const brushD =
-    'M 0,60 C 55,40 120,74 210,56 C 300,38 380,68 480,52 C 580,36 660,65 760,50 C 848,37 912,60 965,50 C 982,47 994,53 1000,51'
-
-  // ── Scroll & parallax ─────────────────────────────────────────
+  // ── Scroll & parallax ─────────────────────────────────────
   const scrollY = ref(0)
   const vhVal = ref(0)
 
-  // Brush stroke refs
-  const brushSection = ref<HTMLElement | null>(null)
-  const brushPath = ref<SVGPathElement | null>(null)
-  const brushLen = ref(9999) // 初始設大值確保筆刷從隱藏開始
-  const brushProgress = ref(0)
-
-  const brushDashoffset = computed(() => (brushLen.value > 0 ? brushLen.value * (1 - brushProgress.value) : 9999))
-
   // Parallax styles (counteract scroll to create depth layers)
-  const slowBg = computed(() => `translateY(${scrollY.value * 0.38}px) scale(1.12)`)
-  const waveLayer = computed(() => `translateY(${scrollY.value * 0.22}px)`)
+  const waveLayer = computed(() => `translateY(${scrollY.value * 0.3}px)`)
   const ghostText = computed(() => `translateY(${scrollY.value * 0.52}px)`)
-  const heroContent = computed(() => `translateY(${scrollY.value * 0.08}px)`)
+  const heroContent = computed(() => `translateY(${scrollY.value * 0.1}px)`)
 
   // ── Article data ──────────────────────────────────────────────
   const articles = [
@@ -91,26 +78,12 @@
   onMounted(() => {
     vhVal.value = window.innerHeight
 
-    // Init brush path length
-    nextTick(() => {
-      if (brushPath.value) {
-        brushLen.value = brushPath.value.getTotalLength()
-      }
-    })
-
     const main = document.querySelector('main')
     if (!main) return
 
-    // Scroll handler: parallax + brush progress
+    // Scroll handler: parallax
     const onScroll = () => {
       scrollY.value = main.scrollTop
-
-      if (brushSection.value) {
-        const rect = brushSection.value.getBoundingClientRect()
-        const h = vhVal.value
-        // Progress: 0 when element top is at 90% viewport → 1 when at 20%
-        brushProgress.value = Math.max(0, Math.min(1, (h * 0.9 - rect.top) / (h * 0.7)))
-      }
     }
     main.addEventListener('scroll', onScroll, { passive: true })
 
@@ -135,8 +108,10 @@
 
 <template>
   <div class="relative">
-    <!-- Fixed paper noise — single instance for whole page -->
-    <canvas-paper-noise :opacity="0.055" :speed="9999" :grain-size="1" class="fixed inset-0 pointer-events-none z-0" />
+    <div class="absolute w-3/5 h-full">
+      <!-- paper noise — single instance for whole page -->
+      <canvas-paper-noise :opacity="0.05" :grain-size="1" class="absolute inset-0 pointer-events-none z-0" />
+    </div>
 
     <!-- ════════════════════════════════════════════════════
          HERO
@@ -183,12 +158,12 @@
             class="font-display italic text-mauve-400 mt-2 tracking-widest"
             style="font-size: clamp(0.85rem, 2vw, 1.25rem)"
           >
-            Sam Reading TW
+            Samantha Reading TW
           </p>
         </div>
 
         <!-- Divider line -->
-        <div class="flex items-center gap-3 mb-6 max-w-[220px] fade-up is-visible" style="transition-delay: 0.2s">
+        <div class="flex items-center gap-3 mb-6 max-w-55 fade-up is-visible" style="transition-delay: 0.2s">
           <div class="h-px flex-1 bg-petal-300" />
           <span class="text-petal-400 text-[9px] tracking-widest">✦</span>
           <div class="h-px flex-1 bg-petal-300" />
@@ -213,12 +188,9 @@
 
       <!-- Scroll indicator (bottom-left) -->
       <div class="absolute bottom-10 left-10 z-20 flex flex-col items-center gap-2 opacity-50">
-        <span
-          class="text-[8px] tracking-[0.5em] text-mauve-500 uppercase [writing-mode:vertical-rl] [letter-spacing:0.4em]"
-          >Scroll</span
-        >
+        <span class="text-[8px] tracking-[0.5em] text-mauve-500 uppercase [writing-mode:vertical-rl]">Scroll</span>
         <div
-          class="w-px h-14 bg-gradient-to-b from-mauve-400 to-transparent animate-[scrollPulse_2s_ease-in-out_infinite]"
+          class="w-px h-14 bg-linear-to-b from-mauve-400 to-transparent animate-[scrollPulse_2s_ease-in-out_infinite]"
         />
       </div>
 
@@ -227,58 +199,6 @@
         <p class="text-[8px] tracking-[0.3em] text-mauve-500 uppercase">Issue No.08</p>
         <p class="text-[8px] tracking-[0.3em] text-mauve-400 mt-0.5">April 2026</p>
       </div>
-    </section>
-
-    <!-- ════════════════════════════════════════════════════
-         BRUSH STROKE (scroll-driven)
-    ═════════════════════════════════════════════════════ -->
-    <section ref="brushSection" class="relative z-10 py-6">
-      <svg
-        viewBox="0 0 1000 90"
-        preserveAspectRatio="none"
-        class="w-full h-[60px]"
-        fill="none"
-        xmlns="http://www.w3.org/2000/svg"
-        aria-hidden="true"
-      >
-        <!-- Shadow stroke — wide, soft -->
-        <path
-          :d="brushD"
-          stroke="#c4a898"
-          stroke-width="18"
-          stroke-linecap="round"
-          stroke-linejoin="round"
-          opacity="0.18"
-          fill="none"
-          :stroke-dasharray="brushLen || 9999"
-          :stroke-dashoffset="brushDashoffset"
-        />
-        <!-- Mid stroke -->
-        <path
-          :d="brushD"
-          stroke="#a08070"
-          stroke-width="7"
-          stroke-linecap="round"
-          stroke-linejoin="round"
-          opacity="0.35"
-          fill="none"
-          :stroke-dasharray="brushLen || 9999"
-          :stroke-dashoffset="brushDashoffset"
-        />
-        <!-- Fine line — sharp ink edge -->
-        <path
-          ref="brushPath"
-          :d="brushD"
-          stroke="#584438"
-          stroke-width="2"
-          stroke-linecap="round"
-          stroke-linejoin="round"
-          opacity="0.65"
-          fill="none"
-          :stroke-dasharray="brushLen || 9999"
-          :stroke-dashoffset="brushDashoffset"
-        />
-      </svg>
     </section>
 
     <!-- ════════════════════════════════════════════════════

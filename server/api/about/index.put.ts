@@ -1,4 +1,4 @@
-import About from '../../models/About'
+import About from '~~/server/models/About'
 
 export default defineEventHandler(async (event) => {
   const body = await readBody(event)

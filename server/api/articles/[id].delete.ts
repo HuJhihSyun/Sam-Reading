@@ -1,4 +1,4 @@
-import Article from '../../../models/Article'
+import Article from '~~/server/models/Article'
 
 export default defineEventHandler(async (event) => {
   const id = getRouterParam(event, 'id')

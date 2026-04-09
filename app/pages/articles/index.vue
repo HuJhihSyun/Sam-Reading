@@ -1,4 +1,7 @@
 <script setup lang="ts">
+  import { useArticleApi } from '@/composables/api/useArticleApi'
+  const { getArticle } = useArticleApi()
+
   useSeoMeta({
     title: "全部文章 — Sam's World",
     description: '瀏覽所有文章——閱讀筆記、生活感悟與日常書寫，按標籤篩選你感興趣的主題。',
@@ -10,56 +13,36 @@
     twitterDescription: '瀏覽所有文章——閱讀筆記、生活感悟與日常書寫，按標籤篩選你感興趣的主題。'
   })
 
-  const articles = [
-    {
-      slug: 'morning-rituals',
-      title: '清晨的儀式感',
-      date: '2026-03-20',
-      tags: ['生活', '日常'],
-      excerpt: '每天清晨，我都會給自己留出一段靜謐的時光。泡一杯熱茶，翻開日記，讓思緒在文字間慢慢甦醒。'
-    },
-    {
-      slug: 'reading-notes-2025',
-      title: '2025 年閱讀回顧',
-      date: '2026-01-01',
-      tags: ['閱讀', '書單'],
-      excerpt: '這一年讀了三十二本書，有些讓我落淚，有些讓我重新思考生活的方式，每一本都留下了痕跡。'
-    },
-    {
-      slug: 'autumn-walks',
-      title: '秋天的散步記事',
-      date: '2025-11-08',
-      tags: ['散步', '秋天', '日常'],
-      excerpt: '葉子開始變色的時候，我喜歡帶上耳機，漫無目的地走上一個小時，讓腦袋徹底放空。'
-    },
-    {
-      slug: 'small-pleasures',
-      title: '微小而確實的幸福',
-      date: '2025-09-15',
-      tags: ['生活', '感悟'],
-      excerpt: '新買的筆記本第一頁、剛沖好的咖啡、窗外突然放晴的天空——幸福原來這麼輕，輕到幾乎不需要理由。'
-    },
-    {
-      slug: 'letter-to-self',
-      title: '給二十五歲的自己',
-      date: '2025-07-03',
-      tags: ['感悟', '成長'],
-      excerpt: '不必那麼著急，所有的答案都會在恰當的時候出現。你現在所經歷的每一段迷茫，都是你正在成長的證明。'
-    },
-    {
-      slug: 'favorite-cafes',
-      title: '那些讓我流連忘返的咖啡館',
-      date: '2025-05-20',
-      tags: ['咖啡館', '生活'],
-      excerpt: '有些咖啡館不只是喝咖啡的地方，它是一個讓你暫時從世界抽身、好好與自己相處的空間。'
+  type Article = {
+    title: string
+    slug: string
+    excerpt: string
+    publishDate: string
+    tags: string[]
+  }
+
+  const isLoading = ref(false)
+  const articles = ref<Article[]>([])
+
+  const fetchArticles = async () => {
+    isLoading.value = true
+    try {
+      const res: any = await getArticle()
+      articles.value = res.data || []
+    } catch (error) {
+      console.error('Error fetching articles:', error)
+    } finally {
+      isLoading.value = false
     }
-  ]
+  }
+
+  fetchArticles()
 
   const selectedTag = ref('')
-  const allTags = [...new Set(articles.flatMap((a) => a.tags))]
+  const allTags = computed(() => [...new Set(articles.value.flatMap((a) => a.tags))])
 
   const filtered = computed(() =>
-    selectedTag.value ? articles.filter((a) => a.tags.includes(selectedTag.value)) : articles
+    selectedTag.value ? articles.value.filter((a) => a.tags.includes(selectedTag.value)) : articles.value
   )
 </script>
 
@@ -123,7 +106,7 @@
               </h2>
               <p class="text-sm text-mauve-500 leading-6 line-clamp-2">{{ article.excerpt }}</p>
               <div class="flex items-center gap-3 mt-3">
-                <span class="text-xs text-mauve-300">{{ article.date }}</span>
+                <span class="text-xs text-mauve-300">{{ article.publishDate }}</span>
                 <span class="text-petal-200">·</span>
                 <div class="flex gap-1.5">
                   <span

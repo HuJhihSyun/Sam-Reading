@@ -1,4 +1,4 @@
-import Contact from '../../../models/Contact'
+import Contact from '~~/server/models/Contact'
 
 export default defineEventHandler(async (event) => {
   const id = getRouterParam(event, 'id')

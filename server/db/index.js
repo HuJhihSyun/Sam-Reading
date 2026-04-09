@@ -5,8 +5,8 @@ export default async (_nitroApp) => {
     mongoose.set("strictQuery", true);  // 嚴格模式
     console.log("MongoDB Connecting...");
     await mongoose.connect(
-      // database 是由 mongoose.connect() 的 URI 所決定：此處設定 database 為 "sam-reading-project"
-      "mongodb+srv://cj654vmp:HuJhihSyun7134@sam-reading-project.xcptjb8.mongodb.net/?appName=sam-reading-project"
+      // database 是由 mongoose.connect() 的 URI 所決定：此處設定 database 為 "sam-reading"
+      "mongodb+srv://cj654vmp:HuJhihSyun7134@sam-reading-project.xcptjb8.mongodb.net/sam-reading?retryWrites=true&w=majority"
     );
     console.log("MongoDB Connected Successfully!");
   } catch (e) {

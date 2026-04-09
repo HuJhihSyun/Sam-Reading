@@ -1,4 +1,4 @@
-import Article from '../../../models/Article'
+import Article from '~~/server/models/Article'
 
 function generateSlug(title: string): string {
   return title

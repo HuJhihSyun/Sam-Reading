@@ -27,6 +27,6 @@ export default defineNuxtConfig({
   modules: ['nuxt-svgo-loader'],
 
   nitro: {
-    plugins: ['~/server/db/index.js']
+    plugins: ['~~/server/db/index.js']
   }
 })

@@ -8,7 +8,6 @@
 
   import { useContactData } from '@/composables/useContactData'
 
-  // const { getAll: getAllArticles } = useArticleData()
   const isLoading = ref(false)
   const articles = ref<Article[]>([])
 

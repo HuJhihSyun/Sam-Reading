@@ -1,6 +1,19 @@
 <script setup lang="ts">
   import { useArticleApi } from '@/composables/api/useArticleApi'
-  const { getArticle } = useArticleApi()
+  const { getArticle, deleteArticle } = useArticleApi()
+
+  interface Article {
+    id: string
+    title: string
+    slug: string
+    publishDate: string
+    tags: string[]
+    excerpt: string
+    content: string
+    status: 'draft' | 'published'
+    createdAt: string
+    updatedAt: string
+  }
 
   definePageMeta({ layout: 'backend' })
   useHead({ title: '文章管理 — 後台管理' })
@@ -22,8 +35,6 @@
   }
 
   fetchArticles()
-
-  // const { getAll, remove } = useArticleData()
 
   const filterStatus = ref<'all' | 'published' | 'draft'>('all')
   const searchQuery = ref('')
@@ -48,12 +59,11 @@
     deleteTarget.value = article
   }
 
-  function doDelete() {
-    console.log('Deleting article:')
-    // if (!deleteTarget.value) return
-    // remove(deleteTarget.value.id)
-    // articles.value = getAll()
-    // deleteTarget.value = null
+  const doDelete = async () => {
+    if (!deleteTarget.value) return
+    await deleteArticle(deleteTarget.value.slug)
+    await fetchArticles()
+    deleteTarget.value = null
   }
 
   function formatDate(d: string) {

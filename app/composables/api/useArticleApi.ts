@@ -13,8 +13,31 @@ export function useArticleApi() {
     })
   }
 
+  const updateArticle = async (slug: string, data: any) => {
+    return await $fetch(`/api/articles/${slug}`, {
+      method: 'PUT',
+      body: data
+    })
+  }
+
+  const deleteArticle = async (slug: string) => {
+    return await $fetch(`/api/articles/${slug}`, {
+      method: 'DELETE'
+    })
+  }
+
+  const createArticle = async (data: any) => {
+    return await $fetch(`/api/articles`, {
+      method: 'POST',
+      body: data
+    })
+  }
+
   return {
     getArticle,
-    getArticleBySlug
+    getArticleBySlug,
+    updateArticle,
+    createArticle,
+    deleteArticle
   }
 }

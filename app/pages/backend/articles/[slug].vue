@@ -1,15 +1,25 @@
 <script setup lang="ts">
   import { useArticleApi } from '@/composables/api/useArticleApi'
-  const { getArticleBySlug } = useArticleApi()
+  const { getArticleBySlug, getArticle, updateArticle } = useArticleApi()
+
+  interface Article {
+    id: string
+    title: string
+    slug: string
+    publishDate: string
+    tags: string[]
+    excerpt: string
+    content: string
+    status: 'draft' | 'published'
+    createdAt: string
+    updatedAt: string
+  }
 
   definePageMeta({ layout: 'backend' })
   useHead({ title: '編輯文章 — 後台管理' })
   useSeoMeta({ robots: 'noindex, nofollow' })
 
-  import { useArticleData, type Article } from '@/composables/useArticleData'
-
   const route = useRoute()
-  const { update } = useArticleData()
 
   const article = ref<Article | null>(null)
 
@@ -17,6 +27,7 @@
     title: '',
     publishDate: '',
     tags: '',
+    slug: '',
     excerpt: '',
     content: '',
     status: 'draft' as 'draft' | 'published'
@@ -34,6 +45,7 @@
         title: article.value.title,
         publishDate: article.value.publishDate,
         tags: article.value.tags.join(', '),
+        slug: article.value.slug,
         excerpt: article.value.excerpt,
         content: article.value.content,
         status: article.value.status
@@ -48,7 +60,6 @@
 
   onMounted(async () => {
     const slug = route.params.slug as string
-    console.log('Editing article with slug:', slug)
     await fetchArticleBySlug(slug)
   })
 
@@ -67,13 +78,14 @@
 
   async function save() {
     if (!validate() || !article.value) return
+    const slug = route.params.slug as string
     saving.value = true
     await new Promise((r) => setTimeout(r, 300))
     const tags = form.tags
       .split(/[,，\s]+/)
       .map((t) => t.trim())
       .filter(Boolean)
-    const updated = update(article.value.id, {
+    const updated = await update(slug, {
       title: form.title,
       publishDate: form.publishDate,
       tags,
@@ -84,9 +96,33 @@
     if (updated) article.value = updated
     saving.value = false
     saved.value = true
-    setTimeout(() => {
-      saved.value = false
-    }, 2000)
+    await updateArticle(slug, updated)
+  }
+
+  const update = async (slug: string, data: any) => {
+    const res = await getArticle()
+    const articles: Article[] = res.data as Article[]
+    const idx = articles.findIndex((a: Article) => a.slug === slug)
+    if (idx === -1) return null
+    const foundArticle = articles[idx]
+    const updated: Article = {
+      ...foundArticle,
+      ...data,
+      id: foundArticle?.id,
+      createdAt: foundArticle?.createdAt,
+      updatedAt: new Date().toISOString()
+    }
+    if (data.title && !data.slug) updated.slug = generateSlug(data.title)
+    articles[idx] = updated
+    return updated
+  }
+
+  const generateSlug = (title: string) => {
+    return title
+      .toLowerCase()
+      .replace(/[\s\u3000]+/g, '-')
+      .replace(/[^\w\-\u4e00-\u9fff]/g, '')
+      .slice(0, 60)
   }
 </script>
 
@@ -150,17 +186,31 @@
         </div>
       </div>
 
-      <!-- Tags -->
-      <div>
-        <label class="block text-xs text-neutral-400 mb-2 tracking-widest uppercase"
-          >標籤 <span class="normal-case text-neutral-600">（用逗號或空白分隔）</span></label
-        >
-        <input
-          v-model="form.tags"
-          type="text"
-          placeholder="生活, 閱讀, 日常"
-          class="w-full px-4 py-3 bg-neutral-800 border border-neutral-700 rounded-lg text-white placeholder-neutral-600 text-sm focus:outline-none focus:border-neutral-500 transition-colors"
-        />
+      <!-- Tags + Slug -->
+      <div class="grid grid-cols-2 gap-4">
+        <div>
+          <label class="block text-xs text-neutral-400 mb-2 tracking-widest uppercase"
+            >標籤 <span class="normal-case text-neutral-600">（用逗號或空白分隔）</span></label
+          >
+          <input
+            v-model="form.tags"
+            type="text"
+            placeholder="生活, 閱讀, 日常"
+            class="w-full px-4 py-3 bg-neutral-800 border border-neutral-700 rounded-lg text-white placeholder-neutral-600 text-sm focus:outline-none focus:border-neutral-500 transition-colors"
+          />
+        </div>
+        <div>
+          <label class="block text-xs text-neutral-400 mb-2 tracking-widest uppercase"
+            >文章 ID <span class="normal-case text-neutral-600">（用於顯示於網頁路徑）</span></label
+          >
+          <input
+            v-model="form.slug"
+            type="text"
+            placeholder="輸入文章 ID"
+            disabled
+            class="w-full px-4 py-3 bg-neutral-800 border border-neutral-700 rounded-lg text-white placeholder-neutral-600 text-sm focus:outline-none focus:border-neutral-500 transition-colors"
+          />
+        </div>
       </div>
 
       <!-- Excerpt -->

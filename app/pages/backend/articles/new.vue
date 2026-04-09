@@ -1,16 +1,29 @@
 <script setup lang="ts">
+  import { useArticleApi } from '@/composables/api/useArticleApi'
+  const { getArticle, createArticle } = useArticleApi()
+
   definePageMeta({ layout: 'backend' })
   useHead({ title: '新增文章 — 後台管理' })
   useSeoMeta({ robots: 'noindex, nofollow' })
 
-  import { useArticleData } from '@/composables/useArticleData'
-
-  const { create } = useArticleData()
+  interface Article {
+    id: string
+    title: string
+    slug: string
+    publishDate: string
+    tags: string[]
+    excerpt: string
+    content: string
+    status: 'draft' | 'published'
+    createdAt: string
+    updatedAt: string
+  }
 
   const form = reactive({
     title: '',
     publishDate: new Date().toISOString().split('T')[0],
     tags: '' as string,
+    slug: '',
     excerpt: '',
     content: '',
     status: 'draft' as 'draft' | 'published'
@@ -24,28 +37,34 @@
     Object.keys(errors).forEach((k) => delete errors[k])
     if (!form.title.trim()) errors.title = '請填寫文章標題'
     if (!form.publishDate) errors.publishDate = '請選擇上架日期'
+    if (!form.slug.trim()) errors.slug = '請填寫文章 ID'
     return Object.keys(errors).length === 0
   }
 
-  async function save() {
+  const save = async () => {
     if (!validate()) return
     saving.value = true
-    await new Promise((r) => setTimeout(r, 300))
+    const now = new Date().toISOString()
     const tags = form.tags
       .split(/[,，\s]+/)
       .map((t) => t.trim())
       .filter(Boolean)
-    create({
+
+    const payload = {
       title: form.title,
       publishDate: form.publishDate,
       tags,
       excerpt: form.excerpt,
       content: form.content,
-      status: form.status
-    })
+      status: form.status,
+      slug: form.slug,
+      createdAt: now,
+      updatedAt: now
+    }
+    console.log('Creating article with payload:', payload)
+    await createArticle(payload)
     saving.value = false
     saved.value = true
-    await new Promise((r) => setTimeout(r, 600))
     await navigateTo('/backend/articles')
   }
 </script>
@@ -98,17 +117,30 @@
         </div>
       </div>
 
-      <!-- Tags -->
-      <div>
-        <label class="block text-xs text-neutral-400 mb-2 tracking-widest uppercase"
-          >標籤 <span class="normal-case text-neutral-600">（用逗號或空白分隔）</span></label
-        >
-        <input
-          v-model="form.tags"
-          type="text"
-          placeholder="生活, 閱讀, 日常"
-          class="w-full px-4 py-3 bg-neutral-800 border border-neutral-700 rounded-lg text-white placeholder-neutral-600 text-sm focus:outline-none focus:border-neutral-500 transition-colors"
-        />
+      <!-- Tags + Slug -->
+      <div class="grid grid-cols-2 gap-4">
+        <div>
+          <label class="block text-xs text-neutral-400 mb-2 tracking-widest uppercase"
+            >標籤 <span class="normal-case text-neutral-600">（用逗號或空白分隔）</span></label
+          >
+          <input
+            v-model="form.tags"
+            type="text"
+            placeholder="生活, 閱讀, 日常"
+            class="w-full px-4 py-3 bg-neutral-800 border border-neutral-700 rounded-lg text-white placeholder-neutral-600 text-sm focus:outline-none focus:border-neutral-500 transition-colors"
+          />
+        </div>
+        <div>
+          <label class="block text-xs text-neutral-400 mb-2 tracking-widest uppercase"
+            >文章 ID <span class="normal-case text-neutral-600">（用於顯示於網頁路徑）</span></label
+          >
+          <input
+            v-model="form.slug"
+            type="text"
+            placeholder="輸入文章 ID"
+            class="w-full px-4 py-3 bg-neutral-800 border border-neutral-700 rounded-lg text-white placeholder-neutral-600 text-sm focus:outline-none focus:border-neutral-500 transition-colors"
+          />
+        </div>
       </div>
 
       <!-- Excerpt -->

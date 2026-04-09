@@ -1,4 +1,7 @@
 <script setup lang="ts">
+  import { useArticleApi } from '@/composables/api/useArticleApi'
+  const { getArticleBySlug } = useArticleApi()
+
   definePageMeta({ layout: 'backend' })
   useHead({ title: '編輯文章 — 後台管理' })
   useSeoMeta({ robots: 'noindex, nofollow' })
@@ -6,7 +9,7 @@
   import { useArticleData, type Article } from '@/composables/useArticleData'
 
   const route = useRoute()
-  const { getById, update } = useArticleData()
+  const { update } = useArticleData()
 
   const article = ref<Article | null>(null)
 
@@ -19,22 +22,34 @@
     status: 'draft' as 'draft' | 'published'
   })
 
-  onMounted(() => {
-    const id = route.params.id as string
-    const found = getById(id)
-    if (!found) {
-      navigateTo('/backend/articles')
-      return
+  const isLoading = ref(false)
+
+  const fetchArticleBySlug = async (slug: string) => {
+    isLoading.value = true
+    try {
+      const res = await getArticleBySlug(slug)
+      article.value = res.data as Article
+
+      Object.assign(form, {
+        title: article.value.title,
+        publishDate: article.value.publishDate,
+        tags: article.value.tags.join(', '),
+        excerpt: article.value.excerpt,
+        content: article.value.content,
+        status: article.value.status
+      })
+    } catch (error) {
+      console.error('Error fetching articles:', error)
+      navigateTo('/articles', { replace: true })
+    } finally {
+      isLoading.value = false
     }
-    article.value = found
-    Object.assign(form, {
-      title: found.title,
-      publishDate: found.publishDate,
-      tags: found.tags.join(', '),
-      excerpt: found.excerpt,
-      content: found.content,
-      status: found.status
-    })
+  }
+
+  onMounted(async () => {
+    const slug = route.params.slug as string
+    console.log('Editing article with slug:', slug)
+    await fetchArticleBySlug(slug)
   })
 
   useHead(computed(() => ({ title: article.value ? `編輯：${article.value.title} — 後台管理` : '編輯文章' })))

@@ -1,20 +1,36 @@
 <script setup lang="ts">
+  import { useArticleApi } from '@/composables/api/useArticleApi'
+  const { getArticle } = useArticleApi()
+
   definePageMeta({ layout: 'backend' })
   useHead({ title: 'Dashboard — 後台管理' })
   useSeoMeta({ robots: 'noindex, nofollow' })
 
-  import { useArticleData } from '@/composables/useArticleData'
   import { useContactData } from '@/composables/useContactData'
 
-  const { getAll: getAllArticles } = useArticleData()
+  // const { getAll: getAllArticles } = useArticleData()
+  const isLoading = ref(false)
+  const articles = ref<Article[]>([])
+
+  const fetchArticles = async () => {
+    isLoading.value = true
+    try {
+      const res: any = await getArticle()
+      articles.value = res.data || []
+    } catch (error) {
+      console.error('Error fetching articles:', error)
+    } finally {
+      isLoading.value = false
+    }
+  }
+
   const { getAll: getAllContacts, unreadCount } = useContactData()
 
-  const articles = ref<ReturnType<typeof getAllArticles>>([])
   const contacts = ref<ReturnType<typeof getAllContacts>>([])
   const unread = ref(0)
 
   onMounted(() => {
-    articles.value = getAllArticles()
+    fetchArticles()
     contacts.value = getAllContacts()
     unread.value = unreadCount()
   })
@@ -81,7 +97,7 @@
               {{ article.status === 'published' ? '已發布' : '草稿' }}
             </span>
             <NuxtLink
-              :to="`/backend/articles/${article.id}`"
+              :to="`/backend/articles/${article.slug}`"
               class="flex-1 text-sm text-neutral-300 truncate group-hover:text-white transition-colors"
             >
               {{ article.title }}

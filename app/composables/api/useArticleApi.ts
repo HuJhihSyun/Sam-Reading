@@ -7,7 +7,14 @@ export function useArticleApi() {
     })
   }
 
+  const getArticleBySlug = async (slug: string) => {
+    return await $fetch(`/api/articles/${slug}`, {
+      method: 'GET'
+    })
+  }
+
   return {
-    getArticle
+    getArticle,
+    getArticleBySlug
   }
 }

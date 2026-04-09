@@ -1,19 +1,36 @@
 <script setup lang="ts">
+  import { useArticleApi } from '@/composables/api/useArticleApi'
+  const { getArticle } = useArticleApi()
+
   definePageMeta({ layout: 'backend' })
   useHead({ title: '文章管理 — 後台管理' })
   useSeoMeta({ robots: 'noindex, nofollow' })
 
-  import { useArticleData, type Article } from '@/composables/useArticleData'
-
-  const { getAll, remove } = useArticleData()
+  const isLoading = ref(false)
   const articles = ref<Article[]>([])
 
-  onMounted(() => {
-    articles.value = getAll()
-  })
+  const fetchArticles = async () => {
+    isLoading.value = true
+    try {
+      const res: any = await getArticle()
+      articles.value = res.data || []
+    } catch (error) {
+      console.error('Error fetching articles:', error)
+    } finally {
+      isLoading.value = false
+    }
+  }
+
+  fetchArticles()
+
+  // const { getAll, remove } = useArticleData()
 
   const filterStatus = ref<'all' | 'published' | 'draft'>('all')
   const searchQuery = ref('')
+
+  function setFilterStatus(value: string) {
+    filterStatus.value = value as 'all' | 'published' | 'draft'
+  }
 
   const filtered = computed(() => {
     let list = articles.value
@@ -32,10 +49,11 @@
   }
 
   function doDelete() {
-    if (!deleteTarget.value) return
-    remove(deleteTarget.value.id)
-    articles.value = getAll()
-    deleteTarget.value = null
+    console.log('Deleting article:')
+    // if (!deleteTarget.value) return
+    // remove(deleteTarget.value.id)
+    // articles.value = getAll()
+    // deleteTarget.value = null
   }
 
   function formatDate(d: string) {
@@ -71,7 +89,7 @@
           :key="opt.value"
           class="px-3 py-1.5 rounded-md text-xs transition-colors"
           :class="filterStatus === opt.value ? 'bg-neutral-700 text-white' : 'text-neutral-500 hover:text-neutral-300'"
-          @click="filterStatus = opt.value as 'all' | 'published' | 'draft'"
+          @click="setFilterStatus(opt.value)"
         >
           {{ opt.label }}
         </button>
@@ -105,7 +123,7 @@
           >
             <td class="px-5 py-3.5">
               <NuxtLink
-                :to="`/backend/articles/${article.id}`"
+                :to="`/backend/articles/${article.slug}`"
                 class="text-sm text-neutral-200 group-hover:text-white transition-colors line-clamp-1"
               >
                 {{ article.title }}
@@ -114,7 +132,7 @@
             </td>
             <td class="px-5 py-3.5">
               <span
-                class="text-[10px] px-2 py-0.5 rounded-full"
+                class="text-[10px] px-2 py-0.5 rounded-full whitespace-nowrap"
                 :class="
                   article.status === 'published'
                     ? 'bg-emerald-900/50 text-emerald-400'
@@ -140,7 +158,7 @@
             <td class="px-5 py-3.5">
               <div class="flex items-center gap-2">
                 <NuxtLink
-                  :to="`/backend/articles/${article.id}`"
+                  :to="`/backend/articles/${article.slug}`"
                   class="text-xs text-neutral-400 hover:text-white transition-colors"
                 >
                   編輯

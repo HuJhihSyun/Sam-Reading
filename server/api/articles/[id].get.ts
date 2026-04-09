@@ -1,8 +1,16 @@
 import Article from '~~/server/models/Article'
 
 export default defineEventHandler(async (event) => {
-  const id = getRouterParam(event, 'id')
-  const article = await Article.findById(id).lean()
+  const slug = getRouterParam(event, 'id')
+  const article = await Article.findOne({ slug }).lean()
   if (!article) throw createError({ statusCode: 404, message: 'Article not found' })
-  return { ...article, id: article._id.toString() }
+
+  return {
+    status: {
+      success: true,
+      code: 'string',
+      message: 'string'
+    },
+    data: { ...article, id: article._id.toString() }
+  }
 })

@@ -1,13 +1,28 @@
 <script setup lang="ts">
+  import { useArticleApi } from '@/composables/api/useArticleApi'
+  const { getArticle } = useArticleApi()
+
+  type Article = {
+    title: string
+    slug: string
+    publishDate: string
+    excerpt: string
+    content: string
+    tags: string[]
+    status: string
+    createdAt: string
+    updatedAt: string
+  }
+
   definePageMeta({ layout: 'default' })
   useSeoMeta({
-    title: "珊珊書評 — Sam's World",
+    title: '珊珊書評',
     description: '珊珊書評是 Samantha 的個人書寫空間，記錄閱讀感悟、生活片段與日常中值得被留下的每一刻。',
-    ogTitle: "珊珊書評 — Sam's World",
+    ogTitle: '珊珊書評',
     ogDescription: '珊珊書評是 Samantha 的個人書寫空間，記錄閱讀感悟、生活片段與日常中值得被留下的每一刻。',
     ogType: 'website',
     twitterCard: 'summary',
-    twitterTitle: "珊珊書評 — Sam's World",
+    twitterTitle: '珊珊書評',
     twitterDescription: '珊珊書評是 Samantha 的個人書寫空間，記錄閱讀感悟、生活片段與日常中值得被留下的每一刻。'
   })
 
@@ -21,56 +36,11 @@
   const heroContent = computed(() => `translateY(${scrollY.value * 0.1}px)`)
 
   // ── Article data ──────────────────────────────────────────────
-  const articles = [
-    {
-      slug: 'morning-rituals',
-      title: '清晨的儀式感',
-      titleEn: 'Morning Rituals',
-      date: '2026.03.20',
-      tag: '生活',
-      excerpt: '泡一杯熱茶，翻開日記，讓思緒在文字間慢慢甦醒。'
-    },
-    {
-      slug: 'reading-notes-2025',
-      title: '2025 年閱讀回顧',
-      titleEn: 'Reading Notes',
-      date: '2026.01.01',
-      tag: '閱讀',
-      excerpt: '三十二本書，每一本都留下了痕跡。'
-    },
-    {
-      slug: 'autumn-walks',
-      title: '秋天的散步記事',
-      titleEn: 'Autumn Walks',
-      date: '2025.11.08',
-      tag: '日常',
-      excerpt: '帶上耳機，漫無目的地走上一個小時。'
-    },
-    {
-      slug: 'small-pleasures',
-      title: '微小而確實的幸福',
-      titleEn: 'Small Pleasures',
-      date: '2025.09.15',
-      tag: '感悟',
-      excerpt: '幸福原來這麼輕，輕到幾乎不需要理由。'
-    },
-    {
-      slug: 'letter-to-self',
-      title: '給二十五歲的自己',
-      titleEn: 'Letter to Self',
-      date: '2025.07.03',
-      tag: '成長',
-      excerpt: '所有的答案都會在恰當的時候出現。'
-    },
-    {
-      slug: 'favorite-cafes',
-      title: '流連忘返的咖啡館',
-      titleEn: 'Favorite Cafés',
-      date: '2025.05.20',
-      tag: '生活',
-      excerpt: '在那裡，你可以好好與自己相處。'
-    }
-  ]
+  const articles = ref(null as Article[] | null)
+
+  const { data: articleData } = await useAsyncData(`articles`, () => getArticle())
+
+  articles.value = (articleData.value?.data as Article[]) || []
 
   // ── IntersectionObserver (fade-up) ───────────────────────────
   let io: IntersectionObserver | null = null
@@ -228,7 +198,7 @@
     </section>
 
     <!-- ════════════════════════════════════════════════════
-         FEATURED ARTICLES
+        FEATURED ARTICLES
     ═════════════════════════════════════════════════════ -->
     <section class="relative z-10 px-10 py-16">
       <!-- Section heading -->
@@ -239,7 +209,7 @@
       </div>
 
       <!-- 3-column cards -->
-      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
+      <div v-if="articles && articles.length" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
         <NuxtLink
           v-for="(a, i) in articles.slice(0, 3)"
           :key="a.slug"
@@ -250,16 +220,22 @@
           <article
             class="h-full border border-petal-100 rounded-2xl p-6 bg-white/40 hover:bg-white/70 hover:border-petal-200 hover:shadow-sm hover:shadow-petal-100/50 transition-all duration-300 flex flex-col"
           >
-            <p class="text-[9px] tracking-[0.4em] text-petal-500 uppercase mb-3">{{ a.tag }}</p>
+            <div class="flex justify-start items-center gap-1 mb-2">
+              <span
+                v-for="tag in a.tags"
+                :key="tag"
+                class="text-[9px] text-petal-500 bg-petal-100 px-2 py-0.5 rounded"
+                >{{ tag }}</span
+              >
+            </div>
             <h3
               class="font-display text-base text-mauve-800 leading-snug mb-1 group-hover:text-mauve-700 transition-colors"
             >
               {{ a.title }}
             </h3>
-            <p class="text-[11px] text-mauve-400 font-display italic mb-3">{{ a.titleEn }}</p>
             <p class="text-xs text-mauve-500 leading-6 flex-1">{{ a.excerpt }}</p>
             <div class="flex items-center justify-between mt-4 pt-3 border-t border-petal-100/80">
-              <time class="text-[10px] text-mauve-300 tracking-wide">{{ a.date }}</time>
+              <time class="text-[10px] text-mauve-300 tracking-wide">{{ a.publishDate }}</time>
               <span class="text-petal-400 text-sm transition-transform duration-200 group-hover:translate-x-1">→</span>
             </div>
           </article>
@@ -268,7 +244,7 @@
     </section>
 
     <!-- ════════════════════════════════════════════════════
-         LATEST ARTICLES  (Japanese editorial list style)
+        LATEST ARTICLES  (Japanese editorial list style)
     ═════════════════════════════════════════════════════ -->
     <section class="relative z-10 px-10 py-16 pb-28">
       <!-- Section heading -->

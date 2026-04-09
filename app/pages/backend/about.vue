@@ -1,19 +1,39 @@
 <script setup lang="ts">
+  import { useAboutApi } from '@/composables/api/useAboutApi'
+  const { getAbout, saveAbout } = useAboutApi()
+
   definePageMeta({ layout: 'backend' })
   useHead({ title: '關於作者編輯 — 後台管理' })
   useSeoMeta({ robots: 'noindex, nofollow' })
 
-  import { useAboutData, type AboutData } from '@/composables/useAboutData'
+  interface AboutData {
+    message: string
+    messageEn: string
+    infoCards: { label: string; value: string }[]
+    interests: string[]
+    name: string
+    updatedAt: string
+  }
 
-  const { get, save } = useAboutData()
+  const isLoading = ref(false)
 
   const data = ref<AboutData | null>(null)
   const interestsInput = ref('')
 
-  onMounted(() => {
-    data.value = get()
-    interestsInput.value = data.value?.interests.join(', ') ?? ''
-  })
+  const fetchAbout = async () => {
+    isLoading.value = true
+    try {
+      const res: any = await getAbout()
+      data.value = res
+      interestsInput.value = data.value?.interests.join(', ') ?? ''
+    } catch (error) {
+      console.error('Error fetching about data:', error)
+    } finally {
+      isLoading.value = false
+    }
+  }
+
+  fetchAbout()
 
   const saving = ref(false)
   const saved = ref(false)
@@ -31,7 +51,7 @@
     data.value?.infoCards.splice(idx, 1)
   }
 
-  async function doSave() {
+  const doSave = async () => {
     if (!data.value) return
     saving.value = true
     await new Promise((r) => setTimeout(r, 250))
@@ -40,12 +60,9 @@
       .split(/[,，\s]+/)
       .map((t) => t.trim())
       .filter(Boolean)
-    save(data.value)
+    await saveAbout(data.value)
     saving.value = false
     saved.value = true
-    setTimeout(() => {
-      saved.value = false
-    }, 2000)
   }
 </script>
 

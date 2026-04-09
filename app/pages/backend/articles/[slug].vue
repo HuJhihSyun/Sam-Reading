@@ -207,7 +207,6 @@
             v-model="form.slug"
             type="text"
             placeholder="輸入文章 ID"
-            disabled
             class="w-full px-4 py-3 bg-neutral-800 border border-neutral-700 rounded-lg text-white placeholder-neutral-600 text-sm focus:outline-none focus:border-neutral-500 transition-colors"
           />
         </div>

@@ -1,30 +1,9 @@
 <script setup lang="ts">
   import { useArticleApi } from '@/composables/api/useArticleApi'
   import { useContactApi } from '@/composables/api/useContactApi'
+  import type { Article, ContactMessage } from '@/types'
   const { getArticle } = useArticleApi()
   const { getContact } = useContactApi()
-
-  export interface ContactMessage {
-    id: string
-    name: string
-    email: string
-    message: string
-    read: boolean
-    receivedAt: string
-  }
-
-  interface Article {
-    id: string
-    title: string
-    slug: string
-    publishDate: string
-    tags: string[]
-    excerpt: string
-    content: string
-    status: 'draft' | 'published'
-    createdAt: string
-    updatedAt: string
-  }
 
   definePageMeta({ layout: 'backend' })
   useHead({ title: 'Dashboard — 後台管理' })

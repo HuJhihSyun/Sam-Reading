@@ -1,14 +1,14 @@
-export function useAboutApi() {
-  //   const baseUrl = 'http://localhost:3000/api/article'
+import type { AboutData } from '@/types'
 
+export function useAboutApi() {
   const getAbout = async () => {
-    return await $fetch(`/api/about`, {
+    return await $fetch<AboutData>(`/api/about`, {
       method: 'GET'
     })
   }
 
-  const saveAbout = async (data: any) => {
-    return await $fetch(`/api/about`, {
+  const saveAbout = async (data: AboutData) => {
+    return await $fetch<AboutData>(`/api/about`, {
       method: 'PUT',
       body: data
     })

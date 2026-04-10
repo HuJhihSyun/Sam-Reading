@@ -1,5 +1,6 @@
 <script setup lang="ts">
   import { useAboutApi } from '@/composables/api/useAboutApi'
+  import type { AboutData } from '@/types'
   const { getAbout } = useAboutApi()
 
   const message = ref('')
@@ -11,14 +12,6 @@
     'A girl who spends her weekends buried in books.',
     'Severely picky when it comes to what she reads.'
   ])
-
-  interface AboutData {
-    message: string
-    messageEn: string
-    infoCards: { label: string; value: string }[]
-    interests: string[]
-    name: string
-  }
 
   const { data: aboutData } = await useAsyncData<AboutData>(`about-data`, () => getAbout() as Promise<AboutData>)
 

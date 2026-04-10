@@ -1,5 +1,6 @@
 <script setup lang="ts">
   import { useArticleApi } from '@/composables/api/useArticleApi'
+  import type { Article } from '@/types'
   const { getArticle } = useArticleApi()
 
   useSeoMeta({
@@ -12,14 +13,6 @@
     twitterTitle: "全部文章 — Sam's World",
     twitterDescription: '瀏覽所有文章——閱讀筆記、生活感悟與日常書寫，按標籤篩選你感興趣的主題。'
   })
-
-  type Article = {
-    title: string
-    slug: string
-    excerpt: string
-    publishDate: string
-    tags: string[]
-  }
 
   const isLoading = ref(false)
   const articles = ref<Article[]>([])

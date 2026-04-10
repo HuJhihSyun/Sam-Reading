@@ -1,23 +1,10 @@
 <script setup lang="ts">
   import { useArticleApi } from '@/composables/api/useArticleApi'
-  const { getArticle, createArticle } = useArticleApi()
+  const { createArticle } = useArticleApi()
 
   definePageMeta({ layout: 'backend' })
   useHead({ title: '新增文章 — 後台管理' })
   useSeoMeta({ robots: 'noindex, nofollow' })
-
-  interface Article {
-    id: string
-    title: string
-    slug: string
-    publishDate: string
-    tags: string[]
-    excerpt: string
-    content: string
-    status: 'draft' | 'published'
-    createdAt: string
-    updatedAt: string
-  }
 
   const form = reactive({
     title: '',

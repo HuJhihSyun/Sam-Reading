@@ -1,22 +1,11 @@
 <script setup lang="ts">
   import { useArticleApi } from '@/composables/api/useArticleApi'
+  import type { Article } from '@/types'
   const { getArticleBySlug } = useArticleApi()
 
   const route = useRoute()
 
   const slug = route.params.slug as string
-
-  type Article = {
-    title: string
-    slug: string
-    publishDate: string
-    excerpt: string
-    content: string
-    tags: string[]
-    status: string
-    createdAt: string
-    updatedAt: string
-  }
 
   const article = ref(null as Article | null)
 

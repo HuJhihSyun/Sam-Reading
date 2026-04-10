@@ -1,20 +1,20 @@
-export function useArticleApi() {
-  //   const baseUrl = 'http://localhost:3000/api/article'
+import type { Article, ArticlePayload } from '@/types'
 
+export function useArticleApi() {
   const getArticle = async () => {
-    return await $fetch(`/api/articles`, {
+    return await $fetch<{ data: Article[] }>(`/api/articles`, {
       method: 'GET'
     })
   }
 
   const getArticleBySlug = async (slug: string) => {
-    return await $fetch(`/api/articles/${slug}`, {
+    return await $fetch<{ data: Article }>(`/api/articles/${slug}`, {
       method: 'GET'
     })
   }
 
-  const updateArticle = async (slug: string, data: any) => {
-    return await $fetch(`/api/articles/${slug}`, {
+  const updateArticle = async (slug: string, data: Partial<ArticlePayload>) => {
+    return await $fetch<{ data: Article }>(`/api/articles/${slug}`, {
       method: 'PUT',
       body: data
     })
@@ -26,8 +26,8 @@ export function useArticleApi() {
     })
   }
 
-  const createArticle = async (data: any) => {
-    return await $fetch(`/api/articles`, {
+  const createArticle = async (data: ArticlePayload) => {
+    return await $fetch<{ data: Article }>(`/api/articles`, {
       method: 'POST',
       body: data
     })

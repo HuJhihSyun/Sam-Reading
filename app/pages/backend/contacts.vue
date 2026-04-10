@@ -1,15 +1,7 @@
 <script setup lang="ts">
   import { useContactApi } from '@/composables/api/useContactApi'
+  import type { ContactMessage } from '@/types'
   const { getContact, putContact, deleteContact } = useContactApi()
-
-  export interface ContactMessage {
-    id: string
-    name: string
-    email: string
-    message: string
-    read: boolean
-    receivedAt: string
-  }
 
   definePageMeta({ layout: 'backend' })
   useHead({ title: '聯絡訊息 — 後台管理' })

@@ -1,19 +1,7 @@
 <script setup lang="ts">
   import { useArticleApi } from '@/composables/api/useArticleApi'
+  import type { Article } from '@/types'
   const { getArticleBySlug, getArticle, updateArticle } = useArticleApi()
-
-  interface Article {
-    id: string
-    title: string
-    slug: string
-    publishDate: string
-    tags: string[]
-    excerpt: string
-    content: string
-    status: 'draft' | 'published'
-    createdAt: string
-    updatedAt: string
-  }
 
   definePageMeta({ layout: 'backend' })
   useHead({ title: '編輯文章 — 後台管理' })

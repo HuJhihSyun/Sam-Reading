@@ -1,18 +1,7 @@
 <script setup lang="ts">
   import { useArticleApi } from '@/composables/api/useArticleApi'
+  import type { Article } from '@/types'
   const { getArticle } = useArticleApi()
-
-  type Article = {
-    title: string
-    slug: string
-    publishDate: string
-    excerpt: string
-    content: string
-    tags: string[]
-    status: string
-    createdAt: string
-    updatedAt: string
-  }
 
   definePageMeta({ layout: 'default' })
   useSeoMeta({

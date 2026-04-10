@@ -1,19 +1,11 @@
 <script setup lang="ts">
   import { useAboutApi } from '@/composables/api/useAboutApi'
+  import type { AboutData } from '@/types'
   const { getAbout, saveAbout } = useAboutApi()
 
   definePageMeta({ layout: 'backend' })
   useHead({ title: '關於作者編輯 — 後台管理' })
   useSeoMeta({ robots: 'noindex, nofollow' })
-
-  interface AboutData {
-    message: string
-    messageEn: string
-    infoCards: { label: string; value: string }[]
-    interests: string[]
-    name: string
-    updatedAt: string
-  }
 
   const isLoading = ref(false)
 

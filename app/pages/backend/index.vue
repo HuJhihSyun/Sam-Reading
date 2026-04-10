@@ -1,12 +1,34 @@
 <script setup lang="ts">
   import { useArticleApi } from '@/composables/api/useArticleApi'
+  import { useContactApi } from '@/composables/api/useContactApi'
   const { getArticle } = useArticleApi()
+  const { getContact } = useContactApi()
+
+  export interface ContactMessage {
+    id: string
+    name: string
+    email: string
+    message: string
+    read: boolean
+    receivedAt: string
+  }
+
+  interface Article {
+    id: string
+    title: string
+    slug: string
+    publishDate: string
+    tags: string[]
+    excerpt: string
+    content: string
+    status: 'draft' | 'published'
+    createdAt: string
+    updatedAt: string
+  }
 
   definePageMeta({ layout: 'backend' })
   useHead({ title: 'Dashboard — 後台管理' })
   useSeoMeta({ robots: 'noindex, nofollow' })
-
-  import { useContactData } from '@/composables/useContactData'
 
   const isLoading = ref(false)
   const articles = ref<Article[]>([])
@@ -23,15 +45,25 @@
     }
   }
 
-  const { getAll: getAllContacts, unreadCount } = useContactData()
-
-  const contacts = ref<ReturnType<typeof getAllContacts>>([])
+  const contacts = ref<ContactMessage[]>([])
   const unread = ref(0)
+
+  const fetchContact = async () => {
+    isLoading.value = true
+    try {
+      const res: any = await getContact()
+      contacts.value = res.data || []
+      unread.value = res.data.filter((m: any) => !m.read).length
+    } catch (error) {
+      console.error('Error fetching contact data:', error)
+    } finally {
+      isLoading.value = false
+    }
+  }
 
   onMounted(() => {
     fetchArticles()
-    contacts.value = getAllContacts()
-    unread.value = unreadCount()
+    fetchContact()
   })
 
   const publishedCount = computed(() => articles.value.filter((a) => a.status === 'published').length)

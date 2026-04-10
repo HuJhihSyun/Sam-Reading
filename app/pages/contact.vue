@@ -1,4 +1,7 @@
 <script setup lang="ts">
+  import { useContactApi } from '@/composables/api/useContactApi'
+  const { postContact } = useContactApi()
+
   useSeoMeta({
     title: "聯絡作者 — Sam's World",
     description: '想和 Samantha 分享閱讀心得或生活感悟？歡迎透過表單留下你的話，她會認真閱讀每一封訊息。',
@@ -16,10 +19,14 @@
 
   const handleSubmit = async () => {
     submitting.value = true
-    // Simulate async submission
-    await new Promise((r) => setTimeout(r, 800))
-    submitting.value = false
-    sent.value = true
+    try {
+      await postContact(form)
+      sent.value = true
+    } catch (error) {
+      console.error('Error submitting contact form:', error)
+    } finally {
+      submitting.value = false
+    }
   }
   const resetForm = () => {
     sent.value = false

@@ -263,12 +263,20 @@
               <span class="text-sm text-mauve-700 group-hover:text-mauve-900 transition-colors truncate">{{
                 a.title
               }}</span>
-              <span class="text-[9px] text-petal-400 bg-petal-50 px-2 py-0.5 rounded-full shrink-0 tracking-wide">{{
+              <!-- <span class="text-[9px] text-petal-400 bg-petal-50 px-2 py-0.5 rounded-full shrink-0 tracking-wide">{{
                 a.tag
-              }}</span>
+              }}</span> -->
+              <div class="flex justify-start items-center gap-1">
+                <span
+                  v-for="tag in a.tags"
+                  :key="tag"
+                  class="text-[9px] text-petal-500 bg-petal-100 px-2 py-0.5 rounded"
+                  >{{ tag }}</span
+                >
+              </div>
             </div>
             <div class="flex items-center gap-3 shrink-0">
-              <time class="text-[10px] text-mauve-300">{{ a.date }}</time>
+              <time class="text-[10px] text-mauve-300">{{ a.publishDate }}</time>
               <span class="text-mauve-300 text-xs transition-transform duration-200 group-hover:translate-x-1">→</span>
             </div>
           </NuxtLink>

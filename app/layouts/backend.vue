@@ -1,5 +1,6 @@
 <script setup lang="ts">
-  import { useContactData } from '@/composables/useContactData'
+  import { useContactApi } from '@/composables/api/useContactApi'
+  const { getContact } = useContactApi()
 
   const route = useRoute()
 
@@ -15,11 +16,19 @@
     return route.path === item.path || route.path.startsWith(item.path + '/')
   }
 
-  const { unreadCount } = useContactData()
   const unread = ref(0)
 
+  const fetchContact = async () => {
+    try {
+      const res: any = await getContact()
+      unread.value = res.data.filter((m: any) => !m.read).length
+    } catch (error) {
+      console.error('Error fetching contact data:', error)
+    }
+  }
+
   onMounted(() => {
-    unread.value = unreadCount()
+    fetchContact()
   })
 </script>
 

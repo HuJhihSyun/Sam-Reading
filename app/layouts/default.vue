@@ -1,4 +1,6 @@
 <script setup lang="ts">
+  import { ref } from 'vue'
+
   const isMobileOpen = ref(false)
 </script>
 
@@ -28,6 +30,8 @@
       <slot />
     </main>
   </div>
+
+  <GlobalLoadingOverlay />
 </template>
 
 <style scoped>

@@ -1,19 +1,40 @@
 <script setup lang="ts">
+  import { useContactApi } from '@/composables/api/useContactApi'
+  const { getContact, putContact, deleteContact } = useContactApi()
+
+  export interface ContactMessage {
+    id: string
+    name: string
+    email: string
+    message: string
+    read: boolean
+    receivedAt: string
+  }
+
   definePageMeta({ layout: 'backend' })
   useHead({ title: '聯絡訊息 — 後台管理' })
   useSeoMeta({ robots: 'noindex, nofollow' })
 
-  import { useContactData, type ContactMessage } from '@/composables/useContactData'
-
-  const { getAll, markRead, remove } = useContactData()
   const messages = ref<ContactMessage[]>([])
   const selected = ref<ContactMessage | null>(null)
   const filterUnread = ref(false)
   const deleteTarget = ref<ContactMessage | null>(null)
 
-  onMounted(() => {
-    messages.value = getAll()
-  })
+  const isLoading = ref(false)
+
+  const fetchContact = async () => {
+    isLoading.value = true
+    try {
+      const res: any = await getContact()
+      messages.value = res.data
+    } catch (error) {
+      console.error('Error fetching contact data:', error)
+    } finally {
+      isLoading.value = false
+    }
+  }
+
+  fetchContact()
 
   const filtered = computed(() => {
     let list = filterUnread.value ? messages.value.filter((m) => !m.read) : messages.value
@@ -31,14 +52,22 @@
     }
   }
 
+  const markRead = (id: string): void => {
+    const msg = messages.value.find((m) => m.id === id)
+    if (msg) {
+      msg.read = true
+      putContact(msg, id)
+    }
+  }
+
   function confirmDelete(msg: ContactMessage) {
     deleteTarget.value = msg
   }
 
   function doDelete() {
     if (!deleteTarget.value) return
-    remove(deleteTarget.value.id)
-    messages.value = getAll()
+    deleteContact(deleteTarget.value.id)
+    messages.value = messages.value.filter((m) => m.id !== deleteTarget.value!.id)
     if (selected.value?.id === deleteTarget.value.id) selected.value = null
     deleteTarget.value = null
   }

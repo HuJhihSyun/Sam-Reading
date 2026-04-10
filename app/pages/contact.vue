@@ -1,16 +1,20 @@
 <script setup lang="ts">
   import { useContactApi } from '@/composables/api/useContactApi'
   const { postContact } = useContactApi()
+  const { buildPageTitle } = useSiteConfig()
+
+  const pageTitle = buildPageTitle('聯絡作者')
+  const pageDescription = '想和 Samantha 分享閱讀心得或生活感悟？歡迎透過表單留下你的話，她會認真閱讀每一封訊息。'
 
   useSeoMeta({
-    title: "聯絡作者 — Sam's World",
-    description: '想和 Samantha 分享閱讀心得或生活感悟？歡迎透過表單留下你的話，她會認真閱讀每一封訊息。',
-    ogTitle: "聯絡作者 — Sam's World",
-    ogDescription: '想和 Samantha 分享閱讀心得或生活感悟？歡迎透過表單留下你的話，她會認真閱讀每一封訊息。',
+    title: pageTitle,
+    description: pageDescription,
+    ogTitle: pageTitle,
+    ogDescription: pageDescription,
     ogType: 'website',
     twitterCard: 'summary',
-    twitterTitle: "聯絡作者 — Sam's World",
-    twitterDescription: '想和 Samantha 分享閱讀心得或生活感悟？歡迎透過表單留下你的話，她會認真閱讀每一封訊息。'
+    twitterTitle: pageTitle,
+    twitterDescription: pageDescription
   })
 
   const form = reactive({ name: '', email: '', message: '' })

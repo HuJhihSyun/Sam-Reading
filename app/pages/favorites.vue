@@ -1,13 +1,18 @@
 <script setup lang="ts">
+  const { buildPageTitle } = useSiteConfig()
+
+  const pageTitle = buildPageTitle('喜歡的事物')
+  const pageDescription = 'Samantha 的收藏清單：最愛的書、喜歡的音樂、生活中的小確幸，以及那些想去的地方。'
+
   useSeoMeta({
-    title: "喜歡的事物 — Sam's World",
-    description: 'Samantha 的收藏清單：最愛的書、喜歡的音樂、生活中的小確幸，以及那些想去的地方。',
-    ogTitle: "喜歡的事物 — Sam's World",
-    ogDescription: 'Samantha 的收藏清單：最愛的書、喜歡的音樂、生活中的小確幸，以及那些想去的地方。',
+    title: pageTitle,
+    description: pageDescription,
+    ogTitle: pageTitle,
+    ogDescription: pageDescription,
     ogType: 'website',
     twitterCard: 'summary',
-    twitterTitle: "喜歡的事物 — Sam's World",
-    twitterDescription: 'Samantha 的收藏清單：最愛的書、喜歡的音樂、生活中的小確幸，以及那些想去的地方。'
+    twitterTitle: pageTitle,
+    twitterDescription: pageDescription
   })
 
   const categories = [

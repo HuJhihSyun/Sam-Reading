@@ -1,15 +1,22 @@
-import mongoose from "mongoose";
+import mongoose from 'mongoose'
 
-export default async (_nitroApp) => {
-  try {
-    mongoose.set("strictQuery", true);  // 嚴格模式
-    console.log("MongoDB Connecting...");
-    await mongoose.connect(
-      // database 是由 mongoose.connect() 的 URI 所決定：此處設定 database 為 "sam-reading"
-      "mongodb+srv://cj654vmp:HuJhihSyun7134@sam-reading-project.xcptjb8.mongodb.net/sam-reading?retryWrites=true&w=majority"
-    );
-    console.log("MongoDB Connected Successfully!");
-  } catch (e) {
-    console.error("Error MongoDB =>", e);
+export default defineNitroPlugin(async () => {
+  const config = useRuntimeConfig()
+  const mongodbUri = config.mongodbUri
+
+  if (!mongodbUri) {
+    console.warn('MongoDB URI is missing. Please set `NUXT_MONGODB_URI` in your `.env` file.')
+    return
   }
-};
+
+  if (mongoose.connection.readyState === 1) return
+
+  try {
+    mongoose.set('strictQuery', true)
+    console.log('MongoDB Connecting...')
+    await mongoose.connect(mongodbUri)
+    console.log('MongoDB Connected Successfully!')
+  } catch (e) {
+    console.error('Error MongoDB =>', e)
+  }
+})

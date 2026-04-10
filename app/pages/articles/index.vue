@@ -2,16 +2,20 @@
   import { useArticleApi } from '@/composables/api/useArticleApi'
   import type { Article } from '@/types'
   const { getArticle } = useArticleApi()
+  const { buildPageTitle } = useSiteConfig()
+
+  const pageTitle = buildPageTitle('全部文章')
+  const pageDescription = '瀏覽所有文章——閱讀筆記、生活感悟與日常書寫，按標籤篩選你感興趣的主題。'
 
   useSeoMeta({
-    title: "全部文章 — Sam's World",
-    description: '瀏覽所有文章——閱讀筆記、生活感悟與日常書寫，按標籤篩選你感興趣的主題。',
-    ogTitle: "全部文章 — Sam's World",
-    ogDescription: '瀏覽所有文章——閱讀筆記、生活感悟與日常書寫，按標籤篩選你感興趣的主題。',
+    title: pageTitle,
+    description: pageDescription,
+    ogTitle: pageTitle,
+    ogDescription: pageDescription,
     ogType: 'website',
     twitterCard: 'summary',
-    twitterTitle: "全部文章 — Sam's World",
-    twitterDescription: '瀏覽所有文章——閱讀筆記、生活感悟與日常書寫，按標籤篩選你感興趣的主題。'
+    twitterTitle: pageTitle,
+    twitterDescription: pageDescription
   })
 
   const isLoading = ref(false)

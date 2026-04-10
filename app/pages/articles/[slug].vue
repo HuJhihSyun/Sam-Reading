@@ -2,6 +2,7 @@
   import { useArticleApi } from '@/composables/api/useArticleApi'
   import type { Article } from '@/types'
   const { getArticleBySlug } = useArticleApi()
+  const { buildPageTitle, defaultDescription } = useSiteConfig()
 
   const route = useRoute()
 
@@ -13,10 +14,10 @@
 
   article.value = articleData.value?.data || null
 
-  const pageTitle = article.value ? `${article.value.title} — 珊珊書評` : '珊珊書評'
+  const pageTitle = buildPageTitle(article.value?.title)
   const pageDescription = article.value
     ? article.value.content.trim().replace(/\*\*/g, '').slice(0, 120).trimEnd() + '…'
-    : '珊珊書評的文章'
+    : defaultDescription
 
   useSeoMeta({
     title: pageTitle,

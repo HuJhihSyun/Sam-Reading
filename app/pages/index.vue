@@ -2,17 +2,18 @@
   import { useArticleApi } from '@/composables/api/useArticleApi'
   import type { Article } from '@/types'
   const { getArticle } = useArticleApi()
+  const { siteName, defaultDescription } = useSiteConfig()
 
   definePageMeta({ layout: 'default' })
   useSeoMeta({
-    title: '珊珊書評',
-    description: '珊珊書評是 Samantha 的個人書寫空間，記錄閱讀感悟、生活片段與日常中值得被留下的每一刻。',
-    ogTitle: '珊珊書評',
-    ogDescription: '珊珊書評是 Samantha 的個人書寫空間，記錄閱讀感悟、生活片段與日常中值得被留下的每一刻。',
+    title: siteName,
+    description: defaultDescription,
+    ogTitle: siteName,
+    ogDescription: defaultDescription,
     ogType: 'website',
     twitterCard: 'summary',
-    twitterTitle: '珊珊書評',
-    twitterDescription: '珊珊書評是 Samantha 的個人書寫空間，記錄閱讀感悟、生活片段與日常中值得被留下的每一刻。'
+    twitterTitle: siteName,
+    twitterDescription: defaultDescription
   })
 
   // ── Scroll & parallax ─────────────────────────────────────

@@ -2,6 +2,7 @@
   import { useAboutApi } from '@/composables/api/useAboutApi'
   import type { AboutData } from '@/types'
   const { getAbout } = useAboutApi()
+  const { buildPageTitle, defaultDescription } = useSiteConfig()
 
   const message = ref('')
   const messageEn = ref('')
@@ -21,16 +22,17 @@
   interests.value = aboutData.value?.interests ?? []
   topItems.value = [aboutData.value?.name ?? '']
 
-  const description = message.value ? message.value.replace(/<br \/>/g, ',').trimEnd() : '珊珊書評的文章'
+  const description = message.value ? message.value.replace(/<br \/>/g, ',').trimEnd() : defaultDescription
+  const pageTitle = buildPageTitle('關於作者')
 
   useSeoMeta({
-    title: '關於作者 — 珊珊書評',
+    title: pageTitle,
     description: description,
-    ogTitle: '關於作者 — 珊珊書評',
+    ogTitle: pageTitle,
     ogDescription: description,
     ogType: 'profile',
     twitterCard: 'summary',
-    twitterTitle: '關於作者 — 珊珊書評',
+    twitterTitle: pageTitle,
     twitterDescription: description
   })
 </script>

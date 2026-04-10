@@ -1,3 +1,5 @@
+export type ArticleStatus = 'draft' | 'published'
+
 export interface Article {
   id: string
   title: string
@@ -6,7 +8,7 @@ export interface Article {
   tags: string[]
   excerpt: string
   content: string
-  status: 'draft' | 'published'
+  status: ArticleStatus
   createdAt: string
   updatedAt: string
   readTime?: number | string
@@ -26,14 +28,29 @@ export interface ContactMessage extends ContactMessageInput {
   receivedAt: string
 }
 
+export interface AboutInfoCard {
+  label: string
+  value: string
+}
+
 export interface AboutData {
   name: string
   message: string
   messageEn: string
-  infoCards: {
-    label: string
-    value: string
-  }[]
+  infoCards: AboutInfoCard[]
   interests: string[]
   updatedAt?: string
+}
+
+export interface SiteConfig {
+  name: string
+  shortName: string
+  description: string
+  url: string
+  author: string
+  locale: string
+  titleSeparator: string
+  ogImage: string
+  contactEmail?: string
+  instagramUrl?: string
 }

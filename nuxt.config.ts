@@ -20,7 +20,7 @@ export default defineNuxtConfig({
   css: ['./app/assets/css/main.css'],
 
   runtimeConfig: {
-    mongodbUri: process.env.NUXT_MONGODB_URI,
+    mongodbUri: process.env.MONGODB_URI,
     public: {
       site: {
         name: siteName,
@@ -62,6 +62,7 @@ export default defineNuxtConfig({
   modules: ['nuxt-svgo-loader'],
 
   nitro: {
+    preset: 'vercel',
     plugins: ['~~/server/db/index.js']
   }
 })

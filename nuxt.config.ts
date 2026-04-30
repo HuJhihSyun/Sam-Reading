@@ -59,7 +59,16 @@ export default defineNuxtConfig({
     plugins: [tailwindcss()]
   },
 
-  modules: ['nuxt-svgo-loader'],
+  site: {
+    url: siteUrl
+  },
+
+  sitemap: {
+    sources: ['/api/__sitemap__/urls'],
+    exclude: ['/backend/**']
+  },
+
+  modules: ['nuxt-svgo-loader', '@nuxtjs/sitemap'],
 
   nitro: {
     preset: 'vercel',

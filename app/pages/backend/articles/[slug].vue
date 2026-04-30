@@ -77,6 +77,7 @@
       title: form.title,
       publishDate: form.publishDate,
       tags,
+      slug: form.slug || article.value.slug,
       excerpt: form.excerpt,
       content: form.content,
       status: form.status
@@ -98,9 +99,9 @@
       ...data,
       id: foundArticle?.id,
       createdAt: foundArticle?.createdAt,
-      updatedAt: new Date().toISOString()
+      updatedAt: new Date().toISOString(),
+      slug: data.slug || foundArticle.slug
     }
-    if (data.title && !data.slug) updated.slug = generateSlug(data.title)
     articles[idx] = updated
     return updated
   }

@@ -18,7 +18,8 @@
     slug: '',
     excerpt: '',
     content: '',
-    status: 'draft' as 'draft' | 'published'
+    status: 'draft' as 'draft' | 'published',
+    coverImage: ''
   })
 
   const isLoading = ref(false)
@@ -36,7 +37,8 @@
         slug: article.value.slug,
         excerpt: article.value.excerpt,
         content: article.value.content,
-        status: article.value.status
+        status: article.value.status,
+        coverImage: article.value.coverImage ?? ''
       })
     } catch (error) {
       console.error('Error fetching articles:', error)
@@ -80,7 +82,8 @@
       slug: form.slug || article.value.slug,
       excerpt: form.excerpt,
       content: form.content,
-      status: form.status
+      status: form.status,
+      coverImage: form.coverImage
     })
     if (updated) article.value = updated
     saving.value = false
@@ -199,6 +202,12 @@
             class="w-full px-4 py-3 bg-neutral-800 border border-neutral-700 rounded-lg text-white placeholder-neutral-600 text-sm focus:outline-none focus:border-neutral-500 transition-colors"
           />
         </div>
+      </div>
+
+      <!-- Cover Image -->
+      <div>
+        <label class="block text-xs text-neutral-400 mb-2 tracking-widest uppercase">封面圖片</label>
+        <backend-cover-image-cropper v-model="form.coverImage" :slug="form.slug || article?.slug || 'article'" />
       </div>
 
       <!-- Excerpt -->

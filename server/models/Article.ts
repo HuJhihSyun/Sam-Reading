@@ -8,6 +8,7 @@ export interface IArticle extends Document {
   excerpt: string
   content: string
   status: 'draft' | 'published'
+  coverImage?: string
 }
 
 const ArticleSchema = new Schema<IArticle>(
@@ -18,7 +19,8 @@ const ArticleSchema = new Schema<IArticle>(
     tags: { type: [String], default: [] },
     excerpt: { type: String, default: '' },
     content: { type: String, default: '' },
-    status: { type: String, enum: ['draft', 'published'], default: 'draft' }
+    status: { type: String, enum: ['draft', 'published'], default: 'draft' },
+    coverImage: { type: String, default: '' }
   },
   { timestamps: true }
 )

@@ -9,6 +9,7 @@ export interface Article {
   excerpt: string
   content: string
   status: ArticleStatus
+  coverImage?: string
   createdAt: string
   updatedAt: string
   readTime?: number | string

@@ -1,4 +1,5 @@
 <script setup lang="ts">
+  import { useSiteConfig } from '@/composables/useSiteConfig'
   import { useAboutApi } from '@/composables/api/useAboutApi'
   import type { AboutData } from '@/types'
   const { getAbout } = useAboutApi()

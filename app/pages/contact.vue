@@ -1,4 +1,5 @@
 <script setup lang="ts">
+  import { useSiteConfig } from '@/composables/useSiteConfig'
   import { useContactApi } from '@/composables/api/useContactApi'
   const { postContact } = useContactApi()
   const { buildPageTitle } = useSiteConfig()

@@ -1,4 +1,5 @@
 <script setup lang="ts">
+  import { useSiteConfig } from '@/composables/useSiteConfig'
   const { buildPageTitle } = useSiteConfig()
 
   const pageTitle = buildPageTitle('喜歡的事物')

@@ -1,4 +1,5 @@
 <script setup lang="ts">
+  import { useSiteConfig } from '@/composables/useSiteConfig'
   import { useArticleApi } from '@/composables/api/useArticleApi'
   import type { Article } from '@/types'
   const { getArticleBySlug } = useArticleApi()

@@ -182,7 +182,7 @@
       <div class="grid grid-cols-2 gap-4">
         <div>
           <label class="block text-xs text-neutral-400 mb-2 tracking-widest uppercase"
-            >標籤 <span class="normal-case text-neutral-600">（用逗號或空白分隔）</span></label
+            >標籤 <span class="text-[10px] normal-case text-neutral-600">(用逗號或空白分隔)</span></label
           >
           <input
             v-model="form.tags"
@@ -193,7 +193,7 @@
         </div>
         <div>
           <label class="block text-xs text-neutral-400 mb-2 tracking-widest uppercase"
-            >文章 ID <span class="normal-case text-neutral-600">（用於顯示於網頁路徑）</span></label
+            >文章 ID <span class="text-[10px] normal-case text-neutral-600">(用於顯示於網頁路徑)</span></label
           >
           <input
             v-model="form.slug"
@@ -205,20 +205,23 @@
       </div>
 
       <!-- Cover Image -->
-      <div>
-        <label class="block text-xs text-neutral-400 mb-2 tracking-widest uppercase">封面圖片</label>
-        <backend-cover-image-cropper v-model="form.coverImage" :slug="form.slug || article?.slug || 'article'" />
-      </div>
-
-      <!-- Excerpt -->
-      <div>
-        <label class="block text-xs text-neutral-400 mb-2 tracking-widest uppercase">文章摘要</label>
-        <textarea
-          v-model="form.excerpt"
-          rows="3"
-          placeholder="簡短描述文章內容（在文章列表中顯示）"
-          class="w-full px-4 py-3 bg-neutral-800 border border-neutral-700 rounded-lg text-white placeholder-neutral-600 text-sm focus:outline-none focus:border-neutral-500 transition-colors resize-none leading-6"
-        />
+      <div class="flex justify-center items-start gap-4">
+        <div class="w-1/4">
+          <label class="block text-xs text-neutral-400 mb-2 tracking-widest uppercase"
+            >封面圖片<span class="text-[10px] normal-case text-neutral-600">(16:9)</span></label
+          >
+          <backend-cover-image-cropper v-model="form.coverImage" :slug="form.slug || article?.slug || 'article'" />
+        </div>
+        <!-- Excerpt -->
+        <div class="w-3/4">
+          <label class="block text-xs text-neutral-400 mb-2 tracking-widest uppercase">文章摘要</label>
+          <textarea
+            v-model="form.excerpt"
+            rows="5"
+            placeholder="簡短描述文章內容（在文章列表中顯示）"
+            class="w-full px-4 py-3 bg-neutral-800 border border-neutral-700 rounded-lg text-white placeholder-neutral-600 text-sm focus:outline-none focus:border-neutral-500 transition-colors resize-none leading-6"
+          />
+        </div>
       </div>
 
       <!-- Content -->

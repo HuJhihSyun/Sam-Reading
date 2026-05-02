@@ -25,17 +25,44 @@
     description: pageDescription,
     ogTitle: pageTitle,
     ogDescription: pageDescription,
+    ogImage: article.value?.coverImage || undefined,
     ogType: 'article',
-    twitterCard: 'summary',
+    twitterCard: article.value?.coverImage ? 'summary_large_image' : 'summary',
     twitterTitle: pageTitle,
-    twitterDescription: pageDescription
+    twitterDescription: pageDescription,
+    twitterImage: article.value?.coverImage || undefined
   })
 </script>
 
 <template>
   <div v-if="article" class="min-h-full">
-    <!-- Header canvas -->
-    <div class="relative h-56 overflow-hidden bg-petal-50">
+    <!-- Header: cover image hero or canvas fallback -->
+    <div v-if="article.coverImage" class="relative overflow-hidden lg:max-h-80 xl:max-h-100 bg-neutral-900">
+      <img :src="article.coverImage" :alt="article.title" class="w-full block object-cover object-center" />
+      <!-- gradient overlay -->
+      <div class="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent" />
+      <div class="absolute inset-0 flex items-end px-10 pb-10">
+        <div class="max-w-2xl">
+          <div class="flex flex-wrap gap-2 mb-3">
+            <span
+              v-for="tag in article.tags"
+              :key="tag"
+              class="text-xs bg-white/20 text-white/90 px-3 py-0.5 rounded-full border border-white/20 backdrop-blur-sm"
+              >{{ tag }}</span
+            >
+          </div>
+          <h1 class="font-display text-3xl md:text-4xl text-white leading-tight drop-shadow-md">{{ article.title }}</h1>
+          <div class="flex items-center gap-3 mt-3 text-xs text-white/60">
+            <span>{{ article.publishDate }}</span>
+            <span class="text-white/30">·</span>
+            <span>{{ article.readTime || 0 }} 閱讀</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Header canvas (no cover image) -->
+    <div v-else class="relative h-56 overflow-hidden bg-petal-50">
       <canvas-sparkles class="absolute inset-0" />
       <canvas-wave-canvas class="absolute inset-0" />
       <div class="absolute inset-0 flex items-end px-10 pb-8">

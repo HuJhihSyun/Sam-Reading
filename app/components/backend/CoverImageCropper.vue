@@ -1,174 +1,174 @@
 <script setup lang="ts">
-const props = defineProps<{
-  modelValue?: string
-  slug: string
-}>()
+  const props = defineProps<{
+    modelValue?: string
+    slug: string
+  }>()
 
-const emit = defineEmits<{
-  'update:modelValue': [value: string]
-}>()
+  const emit = defineEmits<{
+    'update:modelValue': [value: string]
+  }>()
 
-// ── UI state ──────────────────────────────────────────────
-const fileInput = ref<HTMLInputElement | null>(null)
-const showCropModal = ref(false)
-const uploading = ref(false)
-const errorMsg = ref('')
+  // ── UI state ──────────────────────────────────────────────
+  const fileInput = ref<HTMLInputElement | null>(null)
+  const showCropModal = ref(false)
+  const uploading = ref(false)
+  const errorMsg = ref('')
 
-// ── Canvas / image state ──────────────────────────────────
-const canvasRef = ref<HTMLCanvasElement | null>(null)
-const imgEl = ref<HTMLImageElement | null>(null)
+  // ── Canvas / image state ──────────────────────────────────
+  const canvasRef = ref<HTMLCanvasElement | null>(null)
+  const imgEl = ref<HTMLImageElement | null>(null)
 
-// position & scale of image on canvas
-const imgX = ref(0)
-const imgY = ref(0)
-const imgScale = ref(1)
+  // position & scale of image on canvas
+  const imgX = ref(0)
+  const imgY = ref(0)
+  const imgScale = ref(1)
 
-// Drag
-const dragging = ref(false)
-const dragOrigin = ref({ x: 0, y: 0, ix: 0, iy: 0 })
+  // Drag
+  const dragging = ref(false)
+  const dragOrigin = ref({ x: 0, y: 0, ix: 0, iy: 0 })
 
-// Canvas crop output size (16:9)
-const CANVAS_W = 800
-const CANVAS_H = 450
+  // Canvas crop output size (16:9)
+  const CANVAS_W = 800
+  const CANVAS_H = 450
 
-// ── File selection ────────────────────────────────────────
-function pickFile() {
-  errorMsg.value = ''
-  fileInput.value?.click()
-}
-
-function onFileChange(e: Event) {
-  const file = (e.target as HTMLInputElement).files?.[0]
-  if (!file) return
-  if (!file.type.startsWith('image/')) {
-    errorMsg.value = '請選擇圖片檔案'
-    return
+  // ── File selection ────────────────────────────────────────
+  function pickFile() {
+    errorMsg.value = ''
+    fileInput.value?.click()
   }
 
-  const reader = new FileReader()
-  reader.onload = (ev) => {
-    const src = ev.target?.result as string
-    const img = new Image()
-    img.onload = () => {
-      imgEl.value = img
-      // Scale to cover the canvas
-      const scaleX = CANVAS_W / img.width
-      const scaleY = CANVAS_H / img.height
-      imgScale.value = Math.max(scaleX, scaleY)
-      imgX.value = (CANVAS_W - img.width * imgScale.value) / 2
-      imgY.value = (CANVAS_H - img.height * imgScale.value) / 2
-      showCropModal.value = true
-      nextTick(draw)
+  function onFileChange(e: Event) {
+    const file = (e.target as HTMLInputElement).files?.[0]
+    if (!file) return
+    if (!file.type.startsWith('image/')) {
+      errorMsg.value = '請選擇圖片檔案'
+      return
     }
-    img.src = src
+
+    const reader = new FileReader()
+    reader.onload = (ev) => {
+      const src = ev.target?.result as string
+      const img = new Image()
+      img.onload = () => {
+        imgEl.value = img
+        // Scale to cover the canvas
+        const scaleX = CANVAS_W / img.width
+        const scaleY = CANVAS_H / img.height
+        imgScale.value = Math.max(scaleX, scaleY)
+        imgX.value = (CANVAS_W - img.width * imgScale.value) / 2
+        imgY.value = (CANVAS_H - img.height * imgScale.value) / 2
+        showCropModal.value = true
+        nextTick(draw)
+      }
+      img.src = src
+    }
+    reader.readAsDataURL(file)
+    // Reset so same file can be selected again
+    ;(e.target as HTMLInputElement).value = ''
   }
-  reader.readAsDataURL(file)
-  // Reset so same file can be selected again
-  ;(e.target as HTMLInputElement).value = ''
-}
 
-// ── Canvas drawing ────────────────────────────────────────
-function draw() {
-  const canvas = canvasRef.value
-  const img = imgEl.value
-  if (!canvas || !img) return
-  const ctx = canvas.getContext('2d')!
-  ctx.clearRect(0, 0, CANVAS_W, CANVAS_H)
-  ctx.drawImage(img, imgX.value, imgY.value, img.width * imgScale.value, img.height * imgScale.value)
-}
+  // ── Canvas drawing ────────────────────────────────────────
+  function draw() {
+    const canvas = canvasRef.value
+    const img = imgEl.value
+    if (!canvas || !img) return
+    const ctx = canvas.getContext('2d')!
+    ctx.clearRect(0, 0, CANVAS_W, CANVAS_H)
+    ctx.drawImage(img, imgX.value, imgY.value, img.width * imgScale.value, img.height * imgScale.value)
+  }
 
-// ── Drag (mouse) ──────────────────────────────────────────
-function onMouseDown(e: MouseEvent) {
-  dragging.value = true
-  dragOrigin.value = { x: e.clientX, y: e.clientY, ix: imgX.value, iy: imgY.value }
-}
+  // ── Drag (mouse) ──────────────────────────────────────────
+  function onMouseDown(e: MouseEvent) {
+    dragging.value = true
+    dragOrigin.value = { x: e.clientX, y: e.clientY, ix: imgX.value, iy: imgY.value }
+  }
 
-function onMouseMove(e: MouseEvent) {
-  if (!dragging.value) return
-  imgX.value = dragOrigin.value.ix + (e.clientX - dragOrigin.value.x)
-  imgY.value = dragOrigin.value.iy + (e.clientY - dragOrigin.value.y)
-  draw()
-}
+  function onMouseMove(e: MouseEvent) {
+    if (!dragging.value) return
+    imgX.value = dragOrigin.value.ix + (e.clientX - dragOrigin.value.x)
+    imgY.value = dragOrigin.value.iy + (e.clientY - dragOrigin.value.y)
+    draw()
+  }
 
-function onMouseUp() {
-  dragging.value = false
-}
+  function onMouseUp() {
+    dragging.value = false
+  }
 
-// ── Drag (touch) ──────────────────────────────────────────
-function onTouchStart(e: TouchEvent) {
-  const t = e.touches[0]
-  dragging.value = true
-  dragOrigin.value = { x: t.clientX, y: t.clientY, ix: imgX.value, iy: imgY.value }
-}
+  // ── Drag (touch) ──────────────────────────────────────────
+  function onTouchStart(e: TouchEvent) {
+    const t = e.touches[0]
+    dragging.value = true
+    dragOrigin.value = { x: t.clientX, y: t.clientY, ix: imgX.value, iy: imgY.value }
+  }
 
-function onTouchMove(e: TouchEvent) {
-  if (!dragging.value) return
-  e.preventDefault()
-  const t = e.touches[0]
-  imgX.value = dragOrigin.value.ix + (t.clientX - dragOrigin.value.x)
-  imgY.value = dragOrigin.value.iy + (t.clientY - dragOrigin.value.y)
-  draw()
-}
+  function onTouchMove(e: TouchEvent) {
+    if (!dragging.value) return
+    e.preventDefault()
+    const t = e.touches[0]
+    imgX.value = dragOrigin.value.ix + (t.clientX - dragOrigin.value.x)
+    imgY.value = dragOrigin.value.iy + (t.clientY - dragOrigin.value.y)
+    draw()
+  }
 
-function onTouchEnd() {
-  dragging.value = false
-}
+  function onTouchEnd() {
+    dragging.value = false
+  }
 
-// ── Zoom ─────────────────────────────────────────────────
-function onWheel(e: WheelEvent) {
-  e.preventDefault()
-  const factor = e.deltaY < 0 ? 1.08 : 0.92
-  // Zoom toward cursor position on canvas
-  const rect = canvasRef.value!.getBoundingClientRect()
-  const cx = ((e.clientX - rect.left) / rect.width) * CANVAS_W
-  const cy = ((e.clientY - rect.top) / rect.height) * CANVAS_H
-  imgX.value = cx + (imgX.value - cx) * factor
-  imgY.value = cy + (imgY.value - cy) * factor
-  imgScale.value *= factor
-  draw()
-}
+  // ── Zoom ─────────────────────────────────────────────────
+  function onWheel(e: WheelEvent) {
+    e.preventDefault()
+    const factor = e.deltaY < 0 ? 1.08 : 0.92
+    // Zoom toward cursor position on canvas
+    const rect = canvasRef.value!.getBoundingClientRect()
+    const cx = ((e.clientX - rect.left) / rect.width) * CANVAS_W
+    const cy = ((e.clientY - rect.top) / rect.height) * CANVAS_H
+    imgX.value = cx + (imgX.value - cx) * factor
+    imgY.value = cy + (imgY.value - cy) * factor
+    imgScale.value *= factor
+    draw()
+  }
 
-function zoomIn() {
-  imgX.value = CANVAS_W / 2 + (imgX.value - CANVAS_W / 2) * 1.1
-  imgY.value = CANVAS_H / 2 + (imgY.value - CANVAS_H / 2) * 1.1
-  imgScale.value *= 1.1
-  draw()
-}
+  function zoomIn() {
+    imgX.value = CANVAS_W / 2 + (imgX.value - CANVAS_W / 2) * 1.1
+    imgY.value = CANVAS_H / 2 + (imgY.value - CANVAS_H / 2) * 1.1
+    imgScale.value *= 1.1
+    draw()
+  }
 
-function zoomOut() {
-  imgX.value = CANVAS_W / 2 + (imgX.value - CANVAS_W / 2) * 0.9
-  imgY.value = CANVAS_H / 2 + (imgY.value - CANVAS_H / 2) * 0.9
-  imgScale.value *= 0.9
-  draw()
-}
+  function zoomOut() {
+    imgX.value = CANVAS_W / 2 + (imgX.value - CANVAS_W / 2) * 0.9
+    imgY.value = CANVAS_H / 2 + (imgY.value - CANVAS_H / 2) * 0.9
+    imgScale.value *= 0.9
+    draw()
+  }
 
-// ── Crop & upload ─────────────────────────────────────────
-async function cropAndUpload() {
-  const canvas = canvasRef.value
-  if (!canvas) return
-  uploading.value = true
-  errorMsg.value = ''
+  // ── Crop & upload ─────────────────────────────────────────
+  async function cropAndUpload() {
+    const canvas = canvasRef.value
+    if (!canvas) return
+    uploading.value = true
+    errorMsg.value = ''
 
-  try {
-    const dataUrl = canvas.toDataURL('image/jpeg', 0.92)
-    const filename = `cover-${props.slug}-${Date.now()}.jpg`
-    const res = await $fetch<{ path: string }>('/api/images/upload', {
-      method: 'POST',
-      body: { image: dataUrl, filename }
-    })
-    emit('update:modelValue', res.path)
+    try {
+      const dataUrl = canvas.toDataURL('image/jpeg', 0.92)
+      const filename = `cover-${props.slug}-${Date.now()}.jpg`
+      const res = await $fetch<{ path: string }>('/api/images/upload', {
+        method: 'POST',
+        body: { image: dataUrl, filename }
+      })
+      emit('update:modelValue', res.path)
+      showCropModal.value = false
+    } catch (err: any) {
+      errorMsg.value = err?.data?.message ?? '上傳失敗，請重試'
+    } finally {
+      uploading.value = false
+    }
+  }
+
+  function closeCropModal() {
+    if (uploading.value) return
     showCropModal.value = false
-  } catch (err: any) {
-    errorMsg.value = err?.data?.message ?? '上傳失敗，請重試'
-  } finally {
-    uploading.value = false
   }
-}
-
-function closeCropModal() {
-  if (uploading.value) return
-  showCropModal.value = false
-}
 </script>
 
 <template>
@@ -177,10 +177,10 @@ function closeCropModal() {
     <input ref="fileInput" type="file" accept="image/*" class="hidden" @change="onFileChange" />
 
     <!-- Current cover preview + action -->
-    <div class="flex items-start gap-4">
+    <div class="flex flex-col items-start gap-2">
       <!-- Preview box -->
       <div
-        class="relative flex-shrink-0 w-40 h-[90px] rounded-lg overflow-hidden border border-neutral-700 bg-neutral-800 flex items-center justify-center"
+        class="relative shrink-0 w-full rounded-lg overflow-hidden border border-neutral-700 bg-neutral-800 flex items-center justify-center"
       >
         <img v-if="modelValue" :src="modelValue" class="w-full h-full object-cover" alt="封面圖" />
         <span v-else class="text-neutral-600 text-xs text-center px-2">尚未設定封面</span>
@@ -188,22 +188,23 @@ function closeCropModal() {
 
       <!-- Buttons -->
       <div class="flex flex-col gap-2 pt-1">
-        <button
-          type="button"
-          class="px-4 py-2 text-xs bg-neutral-700 hover:bg-neutral-600 text-white rounded-lg transition-colors"
-          @click="pickFile"
-        >
-          {{ modelValue ? '更換封面' : '上傳封面' }}
-        </button>
-        <button
-          v-if="modelValue"
-          type="button"
-          class="px-4 py-2 text-xs text-neutral-500 hover:text-rose-400 transition-colors text-left"
-          @click="emit('update:modelValue', '')"
-        >
-          移除封面
-        </button>
-        <p class="text-neutral-600 text-[11px] leading-4">建議比例 16:9<br />支援 JPG / PNG / WebP</p>
+        <div class="flex gap-2">
+          <button
+            type="button"
+            class="px-4 py-2 text-xs bg-neutral-700 hover:bg-neutral-600 text-white rounded-lg transition-colors"
+            @click="pickFile"
+          >
+            {{ modelValue ? '更換封面' : '上傳封面' }}
+          </button>
+          <button
+            v-if="modelValue"
+            type="button"
+            class="px-4 py-2 text-xs text-neutral-500 hover:text-rose-400 transition-colors text-left"
+            @click="emit('update:modelValue', '')"
+          >
+            移除封面
+          </button>
+        </div>
       </div>
     </div>
 

@@ -8,7 +8,8 @@
   }>()
 
   const editorRef = ref<HTMLDivElement | null>(null)
-  const fileInputRef = ref<HTMLInputElement | null>(null)
+  const cropperOpen = ref(false)
+  let savedRange: Range | null = null
 
   // Sync inner HTML from modelValue on mount
   onMounted(() => {
@@ -51,17 +52,32 @@
     if (url) exec('insertImage', url)
   }
 
-  function onFileChange(e: Event) {
-    const file = (e.target as HTMLInputElement).files?.[0]
-    if (!file) return
-    const reader = new FileReader()
-    reader.onload = (ev) => {
-      const dataUrl = ev.target?.result as string
-      if (dataUrl) exec('insertImage', dataUrl)
+  function saveSelection() {
+    const sel = window.getSelection()
+    if (sel && sel.rangeCount > 0) {
+      savedRange = sel.getRangeAt(0).cloneRange()
     }
-    reader.readAsDataURL(file)
-    // reset
-    if (fileInputRef.value) fileInputRef.value.value = ''
+  }
+
+  function restoreSelection() {
+    if (!savedRange) return
+    const sel = window.getSelection()
+    if (sel) {
+      sel.removeAllRanges()
+      sel.addRange(savedRange)
+    }
+  }
+
+  function openCropper() {
+    saveSelection()
+    cropperOpen.value = true
+  }
+
+  function onCropDone(path: string) {
+    editorRef.value?.focus()
+    restoreSelection()
+    document.execCommand('insertImage', false, path)
+    onInput()
   }
 
   const tools = [
@@ -119,10 +135,7 @@
       <!-- Link & Image -->
       <button type="button" title="插入連結" class="w-7 h-7 rounded text-xs text-neutral-400 hover:bg-neutral-700 hover:text-white transition-colors" @mousedown.prevent="insertLink">🔗</button>
       <button type="button" title="插入圖片 URL" class="w-7 h-7 rounded text-xs text-neutral-400 hover:bg-neutral-700 hover:text-white transition-colors" @mousedown.prevent="insertImageUrl">🖼</button>
-      <label title="上傳圖片" class="w-7 h-7 rounded text-xs text-neutral-400 hover:bg-neutral-700 hover:text-white transition-colors flex items-center justify-center cursor-pointer">
-        ↑
-        <input ref="fileInputRef" type="file" accept="image/*" class="hidden" @change="onFileChange" />
-      </label>
+      <button type="button" title="上傳並裁切圖片" class="w-7 h-7 rounded text-xs text-neutral-400 hover:bg-neutral-700 hover:text-white transition-colors flex items-center justify-center" @mousedown.prevent="openCropper">↑</button>
 
       <div class="w-px h-5 bg-neutral-700 mx-1" />
 
@@ -137,6 +150,8 @@
       @input="onInput"
     />
   </div>
+
+  <backend-inline-image-cropper v-model:open="cropperOpen" slug="inline" @done="onCropDone" />
 </template>
 
 <style scoped>

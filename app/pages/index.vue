@@ -219,11 +219,11 @@
               >
             </div>
             <h3
-              class="font-display text-base text-mauve-800 leading-snug mb-1 group-hover:text-mauve-700 transition-colors"
+              class="font-display text-base text-mauve-800 leading-snug mb-1 group-hover:text-mauve-700 transition-colors line-clamp-1"
             >
               {{ a.title }}
             </h3>
-            <p class="text-xs text-mauve-500 leading-6 flex-1">{{ a.excerpt }}</p>
+            <p class="text-xs text-mauve-500 leading-6 flex-1 line-clamp-3">{{ a.excerpt }}</p>
             <div class="flex items-center justify-between mt-4 pt-3 border-t border-petal-100/80">
               <time class="text-[10px] text-mauve-300 tracking-wide">{{ a.publishDate }}</time>
               <span class="text-petal-400 text-sm transition-transform duration-200 group-hover:translate-x-1">→</span>

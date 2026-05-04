@@ -320,7 +320,7 @@ async function cropAndUpload() {
     const filename = base ? `${base}.jpg` : `inline-${props.slug}-${Date.now()}.jpg`
     const res = await $fetch<{ path: string }>('/api/images/upload', {
       method: 'POST',
-      body: { image: dataUrl, filename }
+      body: { image: dataUrl, filename, folder: 'article' }
     })
     emit('done', res.path)
     close()

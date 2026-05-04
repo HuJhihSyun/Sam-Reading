@@ -18,7 +18,8 @@ export default defineEventHandler(async (event) => {
   const buffer = Buffer.from(base64Data, 'base64')
 
   const filename = (body.filename as string).replace(/[^a-zA-Z0-9._-]/g, '-')
-  const key = `covers/${filename}`
+  const folder = (body.folder as string | undefined)?.replace(/[^a-zA-Z0-9_-]/g, '') || 'covers'
+  const key = `${folder}/${filename}`
 
   const client = new S3Client({
     region: 'auto',

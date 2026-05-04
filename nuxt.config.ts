@@ -26,7 +26,8 @@ export default defineNuxtConfig({
       accessKeyId: process.env.CLOUDFLARE_STORAGE_ACCESS_KEY_ID,
       secretAccessKey: process.env.CLOUDFLARE_STORAGE_SECRET_ACCESS_KEY,
       bucketName: process.env.CLOUDFLARE_STORAGE_BUCKET_NAME,
-      s3Api: process.env.CLOUDFLARE_STORAGE_S3_API
+      s3Api: process.env.CLOUDFLARE_STORAGE_S3_API,
+      publicUrl: process.env.CLOUDFLARE_STORAGE_PUBLIC_URL
     },
     public: {
       site: {

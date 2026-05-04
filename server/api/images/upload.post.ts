@@ -1,6 +1,4 @@
 import { S3Client, PutObjectCommand } from '@aws-sdk/client-s3'
-import { NodeHttpHandler } from '@smithy/node-http-handler'
-import https from 'https'
 
 export default defineEventHandler(async (event) => {
   const body = await readBody(event)
@@ -28,10 +26,7 @@ export default defineEventHandler(async (event) => {
     credentials: {
       accessKeyId: r2.accessKeyId,
       secretAccessKey: r2.secretAccessKey
-    },
-    requestHandler: new NodeHttpHandler({
-      httpsAgent: new https.Agent({ rejectUnauthorized: false })
-    })
+    }
   })
 
   await client.send(
@@ -43,8 +38,8 @@ export default defineEventHandler(async (event) => {
     })
   )
 
-  const publicUrl = r2.s3Api
-    ? `${r2.s3Api}/${key}`
+  const publicUrl = r2.publicUrl
+    ? `${r2.publicUrl}/${key}`
     : `https://${r2.accountId}.r2.cloudflarestorage.com/${r2.bucketName}/${key}`
 
   return { path: publicUrl }

@@ -21,6 +21,13 @@ export default defineNuxtConfig({
 
   runtimeConfig: {
     mongodbUri: process.env.MONGODB_URI,
+    cloudflareR2: {
+      accountId: process.env.CLOUDFLARE_STORAGE_ACCOUNT_ID,
+      accessKeyId: process.env.CLOUDFLARE_STORAGE_ACCESS_KEY_ID,
+      secretAccessKey: process.env.CLOUDFLARE_STORAGE_SECRET_ACCESS_KEY,
+      bucketName: process.env.CLOUDFLARE_STORAGE_BUCKET_NAME,
+      s3Api: process.env.CLOUDFLARE_STORAGE_S3_API
+    },
     public: {
       site: {
         name: siteName,

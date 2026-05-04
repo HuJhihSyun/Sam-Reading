@@ -1,5 +1,6 @@
-import { writeFile, mkdir } from 'fs/promises'
-import { join } from 'path'
+import { S3Client, PutObjectCommand } from '@aws-sdk/client-s3'
+import { NodeHttpHandler } from '@smithy/node-http-handler'
+import https from 'https'
 
 export default defineEventHandler(async (event) => {
   const body = await readBody(event)
@@ -8,14 +9,43 @@ export default defineEventHandler(async (event) => {
     throw createError({ statusCode: 400, message: '缺少 image 或 filename' })
   }
 
+  const config = useRuntimeConfig(event)
+  const r2 = config.cloudflareR2
+
+  if (!r2?.accountId || !r2?.accessKeyId || !r2?.secretAccessKey || !r2?.bucketName) {
+    throw createError({ statusCode: 500, message: 'Cloudflare R2 設定不完整' })
+  }
+
   const base64Data = (body.image as string).replace(/^data:image\/\w+;base64,/, '')
   const buffer = Buffer.from(base64Data, 'base64')
 
-  const imagesDir = join(process.cwd(), 'images')
-  await mkdir(imagesDir, { recursive: true })
-
   const filename = (body.filename as string).replace(/[^a-zA-Z0-9._-]/g, '-')
-  await writeFile(join(imagesDir, filename), buffer)
+  const key = `covers/${filename}`
 
-  return { path: `/images/${filename}` }
+  const client = new S3Client({
+    region: 'auto',
+    endpoint: `https://${r2.accountId}.r2.cloudflarestorage.com`,
+    credentials: {
+      accessKeyId: r2.accessKeyId,
+      secretAccessKey: r2.secretAccessKey
+    },
+    requestHandler: new NodeHttpHandler({
+      httpsAgent: new https.Agent({ rejectUnauthorized: false })
+    })
+  })
+
+  await client.send(
+    new PutObjectCommand({
+      Bucket: r2.bucketName,
+      Key: key,
+      Body: buffer,
+      ContentType: 'image/jpeg'
+    })
+  )
+
+  const publicUrl = r2.s3Api
+    ? `${r2.s3Api}/${key}`
+    : `https://${r2.accountId}.r2.cloudflarestorage.com/${r2.bucketName}/${key}`
+
+  return { path: publicUrl }
 })

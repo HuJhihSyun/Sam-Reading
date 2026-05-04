@@ -36,6 +36,7 @@ export interface AboutInfoCard {
 
 export interface AboutData {
   name: string
+  avatar?: string
   message: string
   messageEn: string
   infoCards: AboutInfoCard[]

@@ -7,6 +7,7 @@ export interface IInfoCard {
 
 export interface IAbout extends Document {
   name: string
+  avatar: string
   message: string
   messageEn: string
   infoCards: IInfoCard[]
@@ -18,6 +19,7 @@ const InfoCardSchema = new Schema<IInfoCard>({ label: String, value: String }, {
 const AboutSchema = new Schema<IAbout>(
   {
     name: { type: String, default: '' },
+    avatar: { type: String, default: '' },
     message: { type: String, default: '' },
     messageEn: { type: String, default: '' },
     infoCards: { type: [InfoCardSchema], default: [] },

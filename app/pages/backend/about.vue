@@ -71,6 +71,12 @@
     </div>
 
     <div v-if="data" class="space-y-8">
+      <!-- Avatar -->
+      <div>
+        <label class="block text-xs text-neutral-400 mb-3 tracking-widest uppercase">作者頭像 <span class="normal-case text-neutral-600">（1:1，顯示於前台側邊欄）</span></label>
+        <backend-avatar-cropper v-model="data.avatar" />
+      </div>
+
       <!-- Name -->
       <div>
         <label class="block text-xs text-neutral-400 mb-2 tracking-widest uppercase">名稱</label>

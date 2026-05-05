@@ -45,7 +45,7 @@
     <div class="relative h-48 overflow-hidden bg-petal-50">
       <canvas-wave-canvas class="absolute inset-0" />
       <canvas-floating-petals class="absolute inset-0" />
-      <div class="absolute inset-0 flex items-end px-10 pb-8">
+      <div class="absolute inset-0 flex items-end px-5 md:px-10 pb-8">
         <div>
           <p class="text-petal-400 text-xs tracking-widest uppercase mb-1">Contact</p>
           <h1 class="font-display text-3xl text-mauve-800">聯絡作者</h1>
@@ -54,7 +54,7 @@
     </div>
 
     <!-- Content -->
-    <div class="px-10 py-12 max-w-lg">
+    <div class="px-5 md:px-10 py-12 max-w-lg">
       <Transition name="fade" mode="out-in">
         <!-- Success state -->
         <div v-if="sent" class="text-center py-12">

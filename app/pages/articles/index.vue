@@ -49,7 +49,7 @@
     <!-- Header canvas -->
     <div class="relative h-48 overflow-hidden bg-petal-50">
       <canvas-wave-canvas class="absolute inset-0" />
-      <div class="absolute inset-0 flex items-end px-10 pb-8">
+      <div class="absolute inset-0 flex items-end px-5 md:px-10 pb-8">
         <div>
           <p class="text-petal-400 text-xs tracking-widest uppercase mb-1">Articles</p>
           <h1 class="font-display text-3xl text-mauve-800">全部文章</h1>
@@ -58,11 +58,11 @@
     </div>
 
     <!-- Filter tags -->
-    <div class="px-10 pt-8 pb-4">
-      <div class="flex flex-wrap gap-2 items-center">
+    <div class="px-5 md:px-10 pt-8 pb-4">
+      <div class="flex flex-wrap gap-1.5 md:gap-2 items-center">
         <span class="text-xs text-mauve-400 mr-1 tracking-wide">篩選：</span>
         <button
-          class="px-3 py-1 rounded-full text-xs border transition-all"
+          class="px-2 md:px-3 py-0.5 md:py-1 rounded-full text-xs border transition-all"
           :class="
             selectedTag === ''
               ? 'bg-petal-400 text-white border-petal-400'
@@ -75,7 +75,7 @@
         <button
           v-for="tag in allTags"
           :key="tag"
-          class="px-3 py-1 rounded-full text-xs border transition-all"
+          class="px-2 md:px-3 py-0.5 md:py-1 rounded-full text-xs border transition-all"
           :class="
             selectedTag === tag
               ? 'bg-petal-400 text-white border-petal-400'
@@ -89,7 +89,7 @@
     </div>
 
     <!-- Article list -->
-    <div class="px-10 pb-12">
+    <div class="px-5 md:px-10 pb-12">
       <TransitionGroup name="list" tag="div" class="space-y-4 mt-4">
         <NuxtLink
           v-for="article in filtered"

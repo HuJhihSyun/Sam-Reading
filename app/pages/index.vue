@@ -101,7 +101,7 @@
       />
 
       <!-- Hero content (slowest parallax — stays longest) -->
-      <div class="absolute inset-0 flex flex-col justify-center px-10 z-20" :style="{ transform: heroContent }">
+      <div class="absolute inset-0 flex flex-col justify-center px-5 md:px-10 z-20" :style="{ transform: heroContent }">
         <!-- Eyebrow -->
         <p class="text-[9px] tracking-[0.45em] text-mauve-400 uppercase mb-7 fade-up is-visible">
           Personal Blog — Est. 2024
@@ -147,7 +147,9 @@
       </div>
 
       <!-- Scroll indicator (bottom-left) -->
-      <div class="absolute bottom-10 left-10 z-20 flex flex-col items-center gap-2 opacity-50">
+      <div
+        class="absolute bottom-28 md:bottom-10 left-auto right-5 md:right-auto md:left-10 z-20 flex flex-col items-center gap-2 opacity-50"
+      >
         <span class="text-[8px] tracking-[0.5em] text-mauve-500 uppercase [writing-mode:vertical-rl]">Scroll</span>
         <div
           class="w-px h-14 bg-linear-to-b from-mauve-400 to-transparent animate-[scrollPulse_2s_ease-in-out_infinite]"
@@ -155,7 +157,7 @@
       </div>
 
       <!-- Issue date (bottom-right) -->
-      <div class="absolute bottom-10 right-10 z-20 text-right opacity-40">
+      <div class="hidden md:block absolute bottom-10 right-10 z-20 text-right opacity-40">
         <p class="text-[8px] tracking-[0.3em] text-mauve-500 uppercase">Issue No.08</p>
         <p class="text-[8px] tracking-[0.3em] text-mauve-400 mt-0.5">April 2026</p>
       </div>
@@ -164,7 +166,7 @@
     <!-- ════════════════════════════════════════════════════
          ABOUT QUOTE
     ═════════════════════════════════════════════════════ -->
-    <section class="relative z-10 px-10 py-16">
+    <section class="relative z-10 px-5 md:px-10 py-12 md:py-16">
       <div class="max-w-xl">
         <p class="fade-up text-[9px] tracking-[0.45em] text-mauve-400 uppercase mb-5">About the Author</p>
         <blockquote
@@ -190,16 +192,16 @@
     <!-- ════════════════════════════════════════════════════
         FEATURED ARTICLES
     ═════════════════════════════════════════════════════ -->
-    <section class="relative z-10 px-10 py-16">
+    <section class="relative z-10 px-5 md:px-10 py-12 md:py-16">
       <!-- Section heading -->
-      <div class="fade-up flex items-center gap-4 mb-10">
+      <div class="fade-up flex items-center gap-4 mb-6 md:mb-10">
         <h2 class="font-display text-xl text-mauve-800 shrink-0">精選文章</h2>
         <span class="text-mauve-300 text-xs shrink-0 tracking-widest">Featured</span>
         <div class="flex-1 h-px bg-petal-200" />
       </div>
 
       <!-- 3-column cards -->
-      <div v-if="articles && articles.length" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
+      <div v-if="articles && articles.length" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-5">
         <NuxtLink
           v-for="(a, i) in articles.slice(0, 3)"
           :key="a.slug"
@@ -208,7 +210,7 @@
           :style="{ transitionDelay: `${i * 0.1}s` }"
         >
           <article
-            class="h-full border border-petal-100 rounded-2xl p-6 bg-white/40 hover:bg-white/70 hover:border-petal-200 hover:shadow-sm hover:shadow-petal-100/50 transition-all duration-300 flex flex-col"
+            class="h-full border border-petal-100 rounded-2xl p-4 md:p-6 bg-white/40 hover:bg-white/70 hover:border-petal-200 hover:shadow-sm hover:shadow-petal-100/50 transition-all duration-300 flex flex-col"
           >
             <div class="flex justify-start items-center gap-1 mb-2">
               <span
@@ -236,9 +238,9 @@
     <!-- ════════════════════════════════════════════════════
         LATEST ARTICLES  (Japanese editorial list style)
     ═════════════════════════════════════════════════════ -->
-    <section class="relative z-10 px-10 py-16 pb-28">
+    <section class="relative z-10 px-5 md:px-10 py-12 md:py-16 pb-16 md:pb-28">
       <!-- Section heading -->
-      <div class="fade-up flex items-center gap-4 mb-8">
+      <div class="fade-up flex items-center gap-4 mb-6 md:mb-8">
         <h2 class="font-display text-xl text-mauve-800 shrink-0">最新文章</h2>
         <span class="text-mauve-300 text-xs shrink-0 tracking-widest">Latest</span>
         <div class="flex-1 h-px bg-petal-200" />
@@ -256,7 +258,7 @@
               <!-- <span class="text-[9px] text-petal-400 bg-petal-50 px-2 py-0.5 rounded-full shrink-0 tracking-wide">{{
                 a.tag
               }}</span> -->
-              <div class="flex justify-start items-center gap-1">
+              <div class="hidden md:flex justify-start items-center gap-1">
                 <span
                   v-for="tag in a.tags"
                   :key="tag"

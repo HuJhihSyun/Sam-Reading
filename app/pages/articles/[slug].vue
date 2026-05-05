@@ -41,7 +41,7 @@
       <img :src="article.coverImage" :alt="article.title" class="w-full h-full object-cover object-center" />
       <!-- gradient overlay -->
       <div class="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent" />
-      <div class="absolute inset-0 flex items-end px-10 pb-10">
+      <div class="absolute inset-0 flex items-end px-5 md:px-10 pb-8 md:pb-10">
         <div class="max-w-2xl">
           <div class="flex flex-wrap gap-2 mb-3">
             <span
@@ -65,7 +65,7 @@
     <div v-else class="relative h-56 overflow-hidden bg-petal-50">
       <canvas-sparkles class="absolute inset-0" />
       <canvas-wave-canvas class="absolute inset-0" />
-      <div class="absolute inset-0 flex items-end px-10 pb-8">
+      <div class="absolute inset-0 flex items-end px-5 md:px-10 pb-8">
         <div class="max-w-xl">
           <div class="flex gap-2 mb-3">
             <span
@@ -86,7 +86,7 @@
     </div>
 
     <!-- Back link -->
-    <div class="px-10 pt-6">
+    <div class="px-5 md:px-10 pt-6">
       <NuxtLink
         to="/articles"
         class="inline-flex items-center gap-1.5 text-xs text-mauve-400 hover:text-petal-500 transition-colors"
@@ -96,7 +96,7 @@
     </div>
 
     <!-- Article content -->
-    <article class="px-10 py-8 max-w-xl">
+    <article class="px-5 md:px-10 py-8 max-w-xl">
       <div class="article-body space-y-5 text-mauve-700 leading-8 text-[15px]" v-html="article.content"></div>
 
       <!-- End decoration -->

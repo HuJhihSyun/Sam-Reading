@@ -50,26 +50,26 @@
     </span>
 
     <!-- Content -->
-    <div class="relative py-12 z-10">
-      <div class="flex justify-center text-mauve-700 leading-8 px-10">
-        <h2 class="w-1/5">Message</h2>
-        <div class="w-4/5">
+    <div class="relative py-10 md:py-12 z-10">
+      <div class="flex flex-col md:flex-row text-mauve-700 leading-8 px-5 md:px-10 gap-3 md:gap-0">
+        <h2 class="md:w-1/5 text-sm text-mauve-400 tracking-widest uppercase md:text-base md:text-mauve-700 md:normal-case md:tracking-normal">Message</h2>
+        <div class="md:w-4/5">
           <p class="text-mauve-600" v-html="message"></p>
           <p class="text-mauve-400 text-xs leading-[2.5] mt-2" v-html="messageEn"></p>
         </div>
       </div>
 
       <!-- Divider -->
-      <div class="flex items-center gap-4 my-10 px-10">
+      <div class="flex items-center gap-4 my-8 md:my-10 px-5 md:px-10">
         <div class="flex-1 h-px bg-petal-200" />
         <span class="text-petal-300 text-xs tracking-widest">✦ ✦ ✦</span>
         <div class="flex-1 h-px bg-petal-200" />
       </div>
 
       <!-- Info cards -->
-      <div class="flex justify-center text-mauve-700 px-10">
-        <h2 class="w-1/5">Information</h2>
-        <div class="w-4/5 grid grid-cols-2 gap-4">
+      <div class="flex flex-col md:flex-row text-mauve-700 px-5 md:px-10 gap-3 md:gap-0">
+        <h2 class="md:w-1/5 text-sm text-mauve-400 tracking-widest uppercase md:text-base md:text-mauve-700 md:normal-case md:tracking-normal">Information</h2>
+        <div class="md:w-4/5 grid grid-cols-1 sm:grid-cols-2 gap-4">
           <div
             v-for="card in infoCards"
             :key="card.label"
@@ -82,7 +82,7 @@
       </div>
 
       <div class="w-full bg-mauve-700 my-14 py-10">
-        <h4 class="text-petal-100 px-10">Hello, my name is</h4>
+        <h4 class="text-petal-100 px-5 md:px-10">Hello, my name is</h4>
         <div class="overflow-hidden w-full">
           <div
             class="marquee-row--top flex whitespace-nowrap text-[10vw] font-extrabold text-petal-200 leading-snug"
@@ -109,7 +109,7 @@
       </div>
 
       <!-- Interests -->
-      <div class="mt-10 px-10">
+      <div class="mt-10 px-5 md:px-10">
         <h2 class="font-display text-mauve-700 mb-5">Favorites</h2>
         <div class="flex flex-wrap gap-2">
           <span

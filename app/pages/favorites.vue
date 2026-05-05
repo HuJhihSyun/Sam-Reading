@@ -74,7 +74,7 @@
     <div class="relative h-48 overflow-hidden bg-petal-50">
       <canvas-sparkles class="absolute inset-0" />
       <canvas-wave-canvas class="absolute inset-0" />
-      <div class="absolute inset-0 flex items-end px-10 pb-8">
+      <div class="absolute inset-0 flex items-end px-5 md:px-10 pb-8">
         <div>
           <p class="text-petal-400 text-xs tracking-widest uppercase mb-1">Favorites</p>
           <h1 class="font-display text-3xl text-mauve-800">喜歡的事物</h1>
@@ -83,7 +83,7 @@
     </div>
 
     <!-- Content -->
-    <div class="px-10 py-10">
+    <div class="px-5 md:px-10 py-10">
       <p class="text-mauve-400 text-sm mb-8 max-w-md leading-6">
         這裡收集了一些讓我感到喜悅的事物，沒有什麼特別的順序，只是想記錄下來。
       </p>

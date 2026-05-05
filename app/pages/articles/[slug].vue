@@ -1,9 +1,9 @@
 <script setup lang="ts">
-  import { useSiteConfig } from '@/composables/useSiteConfig'
+  import { useBlogConfig } from '@/composables/useBlogConfig'
   import { useArticleApi } from '@/composables/api/useArticleApi'
   import type { Article } from '@/types'
   const { getArticleBySlug } = useArticleApi()
-  const { buildPageTitle, defaultDescription } = useSiteConfig()
+  const { buildPageTitle, defaultDescription } = useBlogConfig()
   const { applyBlogPostingSchema, applyBreadcrumbSchema } = useSchemas()
 
   const route = useRoute()

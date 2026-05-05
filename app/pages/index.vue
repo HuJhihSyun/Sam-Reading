@@ -2,7 +2,7 @@
   import { useArticleApi } from '@/composables/api/useArticleApi'
   import type { Article } from '@/types'
   const { getArticle } = useArticleApi()
-  const { siteName, defaultDescription } = useSiteConfig()
+  const { siteName, defaultDescription } = useBlogConfig()
   const { applyWebsiteSchema } = useSchemas()
 
   definePageMeta({ layout: 'default' })

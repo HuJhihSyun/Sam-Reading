@@ -1,6 +1,6 @@
 <script setup lang="ts">
-  import { useSiteConfig } from '@/composables/useSiteConfig'
-  const { buildPageTitle } = useSiteConfig()
+  import { useBlogConfig } from '@/composables/useBlogConfig'
+  const { buildPageTitle } = useBlogConfig()
 
   const pageTitle = buildPageTitle('喜歡的事物')
   const pageDescription = 'Samantha 的收藏清單：最愛的書、喜歡的音樂、生活中的小確幸，以及那些想去的地方。'

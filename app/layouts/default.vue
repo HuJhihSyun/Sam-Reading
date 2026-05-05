@@ -1,5 +1,5 @@
 <script setup lang="ts">
-  const { siteUrl } = useSiteConfig()
+  const { siteUrl } = useBlogConfig()
   const route = useRoute()
 
   useHead({

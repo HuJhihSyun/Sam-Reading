@@ -5,6 +5,10 @@
   useHead({
     link: computed(() => [{ rel: 'canonical', href: `${siteUrl}${route.path}` }])
   })
+
+  watch(() => route.path, () => {
+    document.querySelector('main')?.scrollTo({ top: 0, behavior: 'instant' })
+  })
 </script>
 
 <template>

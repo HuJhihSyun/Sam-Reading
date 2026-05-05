@@ -77,7 +77,7 @@ export default defineNuxtConfig({
     exclude: ['/backend/**']
   },
 
-  modules: ['nuxt-svgo-loader', '@nuxtjs/sitemap', '@vercel/analytics'],
+  modules: ['nuxt-svgo-loader', '@nuxtjs/sitemap', '@vercel/analytics', '@vercel/speed-insights'],
 
   nitro: {
     preset: 'vercel',

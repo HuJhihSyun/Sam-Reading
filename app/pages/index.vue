@@ -3,8 +3,10 @@
   import type { Article } from '@/types'
   const { getArticle } = useArticleApi()
   const { siteName, defaultDescription } = useSiteConfig()
+  const { applyWebsiteSchema } = useSchemas()
 
   definePageMeta({ layout: 'default' })
+  applyWebsiteSchema()
   useSeoMeta({
     title: siteName,
     description: defaultDescription,

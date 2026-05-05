@@ -4,6 +4,7 @@
   import type { Article } from '@/types'
   const { getArticleBySlug } = useArticleApi()
   const { buildPageTitle, defaultDescription } = useSiteConfig()
+  const { applyBlogPostingSchema, applyBreadcrumbSchema } = useSchemas()
 
   const route = useRoute()
 
@@ -19,6 +20,15 @@
   const pageDescription = article.value
     ? article.value.content.trim().replace(/\*\*/g, '').slice(0, 120).trimEnd() + '…'
     : defaultDescription
+
+  if (article.value) {
+    applyBlogPostingSchema(article.value)
+    applyBreadcrumbSchema([
+      { name: '首頁', path: '/' },
+      { name: '全部文章', path: '/articles' },
+      { name: article.value.title, path: `/articles/${article.value.slug}` }
+    ])
+  }
 
   useSeoMeta({
     title: pageTitle,

@@ -4,6 +4,8 @@
   import type { AboutData } from '@/types'
   const { getAbout } = useAboutApi()
   const { buildPageTitle, defaultDescription } = useSiteConfig()
+  const { applyPersonSchema } = useSchemas()
+  applyPersonSchema()
 
   const message = ref('')
   const messageEn = ref('')

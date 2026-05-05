@@ -10,7 +10,7 @@ const siteUrl = process.env.NUXT_PUBLIC_SITE_URL || 'http://localhost:3000'
 const siteAuthor = process.env.NUXT_PUBLIC_SITE_AUTHOR || 'Samantha Cho'
 const siteLocale = process.env.NUXT_PUBLIC_SITE_LOCALE || 'zh-Hant-TW'
 const titleSeparator = process.env.NUXT_PUBLIC_SITE_TITLE_SEPARATOR || '—'
-const siteOgImage = process.env.NUXT_PUBLIC_SITE_OG_IMAGE || '/favicon.ico'
+const siteOgImage = process.env.NUXT_PUBLIC_SITE_OG_IMAGE || '/og-default.jpg'
 const contactEmail = process.env.NUXT_PUBLIC_CONTACT_EMAIL || 'hello@example.com'
 const instagramUrl = process.env.NUXT_PUBLIC_INSTAGRAM_URL || 'https://www.instagram.com/sam_readingtw/'
 

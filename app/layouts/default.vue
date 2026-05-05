@@ -1,4 +1,11 @@
-<script setup lang="ts"></script>
+<script setup lang="ts">
+  const { siteUrl } = useSiteConfig()
+  const route = useRoute()
+
+  useHead({
+    link: computed(() => [{ rel: 'canonical', href: `${siteUrl}${route.path}` }])
+  })
+</script>
 
 <template>
   <div class="flex h-screen bg-petal-50 overflow-hidden font-serif">

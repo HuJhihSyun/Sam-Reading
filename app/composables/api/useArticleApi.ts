@@ -1,15 +1,17 @@
 import type { Article, ArticlePayload } from '@/types'
 
 export function useArticleApi() {
-  const getArticle = async () => {
+  const getArticle = async (onlyPublished = false) => {
     return await $fetch<{ data: Article[] }>(`/api/articles`, {
-      method: 'GET'
+      method: 'GET',
+      query: onlyPublished ? { status: 'published' } : undefined
     })
   }
 
-  const getArticleBySlug = async (slug: string) => {
+  const getArticleBySlug = async (slug: string, onlyPublished = false) => {
     return await $fetch<{ data: Article }>(`/api/articles/${slug}`, {
-      method: 'GET'
+      method: 'GET',
+      query: onlyPublished ? { status: 'published' } : undefined
     })
   }
 

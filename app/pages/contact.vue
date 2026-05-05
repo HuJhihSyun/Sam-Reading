@@ -1,8 +1,8 @@
 <script setup lang="ts">
-  import { useSiteConfig } from '@/composables/useSiteConfig'
+  import { useBlogConfig } from '@/composables/useBlogConfig'
   import { useContactApi } from '@/composables/api/useContactApi'
   const { postContact } = useContactApi()
-  const { buildPageTitle } = useSiteConfig()
+  const { buildPageTitle } = useBlogConfig()
 
   const pageTitle = buildPageTitle('聯絡作者')
   const pageDescription = '想和 Samantha 分享閱讀心得或生活感悟？歡迎透過表單留下你的話，她會認真閱讀每一封訊息。'

@@ -1,6 +1,6 @@
 import type { SiteConfig } from '@/types'
 
-export function useSiteConfig() {
+export function useBlogConfig() {
   const config = useRuntimeConfig()
   const site = config.public.site as SiteConfig
 

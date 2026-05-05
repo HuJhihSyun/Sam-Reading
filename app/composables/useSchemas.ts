@@ -1,7 +1,7 @@
 import type { Article } from '@/types'
 
 export function useSchemas() {
-  const { siteUrl, siteName, siteShortName, author, ogImage } = useSiteConfig()
+  const { siteUrl, siteName, siteShortName, author, ogImage } = useBlogConfig()
 
   function applySchema(schema: object) {
     useHead({

@@ -49,6 +49,7 @@ export default defineNuxtConfig({
     head: {
       charset: 'utf-8',
       viewport: 'width=device-width, initial-scale=1',
+      title: siteName,
       htmlAttrs: { lang: 'zh-Hant' },
       link: [{ rel: 'icon', type: 'image/svg+xml', href: '/favicon.svg' }],
       meta: [
@@ -76,7 +77,7 @@ export default defineNuxtConfig({
     exclude: ['/backend/**']
   },
 
-  modules: ['nuxt-svgo-loader', '@nuxtjs/sitemap', '@vercel/analytics'],
+  modules: ['nuxt-svgo-loader', '@nuxtjs/sitemap', '@vercel/analytics', '@vercel/speed-insights'],
 
   nitro: {
     preset: 'vercel',

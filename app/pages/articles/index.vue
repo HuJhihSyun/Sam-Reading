@@ -1,9 +1,9 @@
 <script setup lang="ts">
-  import { useSiteConfig } from '@/composables/useSiteConfig'
+  import { useBlogConfig } from '@/composables/useBlogConfig'
   import { useArticleApi } from '@/composables/api/useArticleApi'
   import type { Article } from '@/types'
   const { getArticle } = useArticleApi()
-  const { buildPageTitle } = useSiteConfig()
+  const { buildPageTitle } = useBlogConfig()
 
   const pageTitle = buildPageTitle('全部文章')
   const pageDescription = '瀏覽所有文章——閱讀筆記、生活感悟與日常書寫，按標籤篩選你感興趣的主題。'
@@ -25,7 +25,7 @@
   const fetchArticles = async () => {
     isLoading.value = true
     try {
-      const res: any = await getArticle()
+      const res: any = await getArticle(true)
       articles.value = res.data || []
     } catch (error) {
       console.error('Error fetching articles:', error)

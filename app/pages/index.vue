@@ -116,12 +116,16 @@
               >珊珊書評</span
             >
           </h1>
-          <p
-            class="font-display italic text-mauve-400 mt-2 tracking-widest"
+          <a
+            href="https://www.instagram.com/sam_readingtw/"
+            title="sam_readingtw"
+            target="_blank"
+            rel="noopener noreferrer"
+            class="font-display italic text-mauve-400 hover:text-mauve-500 mt-2 tracking-widest"
             style="font-size: clamp(0.85rem, 2vw, 1.25rem)"
           >
             Samantha Reading TW
-          </p>
+          </a>
         </div>
 
         <!-- Divider line -->

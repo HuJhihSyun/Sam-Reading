@@ -1,8 +1,8 @@
 <script setup lang="ts">
   import { useBlogConfig } from '@/composables/useBlogConfig'
   import { useArticleApi } from '@/composables/api/useArticleApi'
-  import type { Article } from '@/types'
-  const { getArticleBySlug } = useArticleApi()
+  import type { Article, AboutData } from '@/types'
+  const { getArticleBySlug, getArticle } = useArticleApi()
   const { buildPageTitle, defaultDescription } = useBlogConfig()
   const { applyBlogPostingSchema, applyBreadcrumbSchema } = useSchemas()
 
@@ -12,9 +12,18 @@
 
   const article = ref(null as Article | null)
 
-  const { data: articleData } = await useAsyncData(`article-${slug}`, () => getArticleBySlug(slug, true))
+  const [{ data: articleData }, { data: aboutData }, { data: recentData }] = await Promise.all([
+    useAsyncData(`article-${slug}`, () => getArticleBySlug(slug, true)),
+    useAsyncData('about-article-page', () => $fetch<AboutData>('/api/about')),
+    useAsyncData('articles-recent', () => getArticle(true))
+  ])
 
   article.value = articleData.value?.data || null
+
+  const about = aboutData.value
+  const recentArticles = computed(() =>
+    (recentData.value?.data || []).filter((a: Article) => a.slug !== slug).slice(0, 4)
+  )
 
   const pageTitle = buildPageTitle(article.value?.title)
   const pageDescription = article.value
@@ -95,28 +104,97 @@
       </div>
     </div>
 
-    <!-- Back link -->
-    <div class="px-5 md:px-10 pt-6">
-      <NuxtLink
-        to="/articles"
-        class="inline-flex items-center gap-1.5 text-xs text-mauve-400 hover:text-petal-500 transition-colors"
-      >
-        <span>←</span> 返回文章列表
-      </NuxtLink>
-    </div>
+    <!-- Back link + two-column layout -->
+    <div class="px-5 md:px-6 lg:px-10 pt-6 pb-16 flex flex-col lg:flex-row lg:gap-12 xl:gap-16">
 
-    <!-- Article content -->
-    <article class="px-5 md:px-10 py-8 max-w-xl">
-      <div class="article-body space-y-5 text-mauve-700 leading-8 text-[15px]" v-html="article.content"></div>
+      <!-- ── Main article ─────────────────────────────────── -->
+      <div class="flex-1 min-w-0">
+        <NuxtLink
+          to="/articles"
+          class="inline-flex items-center gap-1.5 text-xs text-mauve-400 hover:text-petal-500 transition-colors"
+        >
+          <span>←</span> 返回文章列表
+        </NuxtLink>
 
-      <!-- End decoration -->
-      <div class="flex items-center gap-4 mt-12 mb-2">
-        <div class="flex-1 h-px bg-petal-100" />
-        <span class="text-petal-300 text-xs">✦</span>
-        <div class="flex-1 h-px bg-petal-100" />
+        <div class="flex flex-col sm:flex-row justify-center items-start gap-4 md:gap-6 lg:gap-8 xl:gap-10">
+          <article class="pb-6 pt-4 w-full sm:w-2/3 2xl:w-4/5">
+            <div class="article-body space-y-5 text-mauve-700 leading-8 text-[15px]" v-html="article.content"></div>
+
+            <!-- End decoration -->
+            <div class="flex items-center gap-4 mt-12 mb-2">
+              <div class="flex-1 h-px bg-petal-100" />
+              <span class="text-petal-300 text-xs">✦</span>
+              <div class="flex-1 h-px bg-petal-100" />
+            </div>
+            <p class="text-center text-xs text-mauve-300 tracking-widest">感謝閱讀</p>
+          </article>
+          <!-- ── Sidebar ──────────────────────────────────────── -->
+          <aside class="w-full sm:w-1/3 2xl:w-1/5">
+            <div class="space-y-8">
+              <!-- Author card -->
+              <div class="flex flex-col items-center gap-3 py-6 px-4 rounded-2xl bg-petal-50 border border-petal-100">
+                <div class="flex sm:flex-col justify-center items-center gap-3">
+                  <!-- Avatar -->
+                  <div class="w-16 h-16 rounded-full overflow-hidden border-2 border-petal-200 shrink-0 bg-petal-100 flex items-center justify-center">
+                    <img v-if="about?.avatar" :src="about.avatar" alt="作者頭像" class="w-full h-full object-cover" />
+                    <span v-else class="font-display text-2xl text-petal-400">S</span>
+                  </div>
+                  <!-- Name -->
+                  <div class="sm:text-center">
+                    <p class="font-display text-sm text-mauve-800 font-semibold">{{ about?.name || 'Samantha' }}</p>
+                    <p class="text-[10px] text-mauve-400 tracking-widest mt-0.5">Author</p>
+                  </div>
+                </div>
+                <!-- Description -->
+                <p v-if="about?.message" class="text-[11px] text-center sm:text-left text-mauve-500 leading-[1.8] line-clamp-4">
+                  {{ about.message.replace(/<br\s*\/?>/gi, ' ') }}
+                </p>
+                <NuxtLink
+                  to="/about"
+                  class="text-[10px] tracking-widest text-petal-500 hover:text-petal-700 transition-colors uppercase"
+                >了解更多 →</NuxtLink>
+              </div>
+
+              <!-- Publish date -->
+              <div class="px-1">
+                <p class="text-[9px] tracking-[0.4em] text-mauve-300 uppercase mb-2">Published</p>
+                <p class="text-sm text-mauve-600 font-display">{{ article.publishDate }}</p>
+                <div v-if="article.tags?.length" class="flex flex-wrap gap-1.5 mt-3">
+                  <span
+                    v-for="tag in article.tags"
+                    :key="tag"
+                    class="text-[9px] text-petal-500 bg-petal-100 px-2 py-0.5 rounded tracking-wide"
+                  >{{ tag }}</span>
+                </div>
+              </div>
+
+              <!-- Divider -->
+              <div class="h-px bg-petal-100" />
+
+              <!-- Recent articles -->
+              <div v-if="recentArticles.length" class="px-1">
+                <p class="text-[9px] tracking-[0.4em] text-mauve-300 uppercase mb-4">Recent Articles</p>
+                <ul class="divide-y divide-petal-100 space-y-3">
+                  <li v-for="a in recentArticles" :key="a.slug" class="pb-3">
+                    <NuxtLink
+                      :to="`/articles/${a.slug}`"
+                      class="group block"
+                    >
+                      <p class="text-[12px] text-mauve-700 group-hover:text-mauve-900 leading-snug transition-colors line-clamp-2">
+                        {{ a.title }}
+                      </p>
+                      <time class="text-[10px] text-mauve-300 mt-1 block">{{ a.publishDate }}</time>
+                    </NuxtLink>
+                  </li>
+                </ul>
+              </div>
+
+            </div>
+          </aside>
+        </div>
       </div>
-      <p class="text-center text-xs text-mauve-300 tracking-widest">感謝閱讀</p>
-    </article>
+
+    </div>
   </div>
 </template>
 

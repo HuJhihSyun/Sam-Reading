@@ -5,9 +5,7 @@
 
   const route = useRoute()
 
-  const { data: about } = await useAsyncData('about-sidebar', () =>
-    $fetch<AboutData>('/api/about')
-  )
+  const { data: about } = await useAsyncData('about-sidebar', () => $fetch<AboutData>('/api/about'))
 
   const navItems = [
     { path: '/', label: '首頁', icon: markRaw(PencilSvg), text: 'Home' },
@@ -43,12 +41,7 @@
       <!-- Blog header -->
       <div class="text-center mb-10">
         <div class="w-14 h-14 mx-auto mb-4 rounded-full overflow-hidden shadow-sm shadow-petal-200">
-          <img
-            v-if="about?.avatar"
-            :src="about.avatar"
-            alt="作者頭像"
-            class="w-full h-full object-cover"
-          />
+          <img v-if="about?.avatar" :src="about.avatar" alt="作者頭像" class="w-full h-full object-cover" />
           <div
             v-else
             class="w-full h-full bg-linear-to-br from-petal-200 to-petal-400 flex items-center justify-center"
@@ -57,7 +50,17 @@
           </div>
         </div>
         <h1 class="font-display text-mauve-800 text-xl tracking-widest leading-snug">珊珊書評</h1>
-        <h2 class="font-display text-mauve-800 text-sm mt-2 tracking-widest leading-snug">Sam Reading TW</h2>
+        <h2 class="font-display text-sm mt-2 tracking-widest leading-snug">
+          <a
+            href="https://www.instagram.com/sam_readingtw/"
+            title="sam_readingtw"
+            target="_blank"
+            rel="noopener noreferrer"
+            class="text-mauve-800 hover:text-mauve-900"
+          >
+            Sam Reading TW
+          </a>
+        </h2>
         <div class="w-10 h-px bg-petal-300 mx-auto mt-2 mb-2" />
         <p class="text-xs text-mauve-400 tracking-widest">日常 · 閱讀 · 感悟</p>
       </div>

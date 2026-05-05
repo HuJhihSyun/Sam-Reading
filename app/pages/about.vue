@@ -45,7 +45,7 @@
     <canvas-paper-noise :opacity="0.05" :grain-size="1" class="absolute inset-0 pointer-events-none z-0" />
 
     <span
-      class="fixed top-0 right-0 text-[15vw] leading-none text-mauve-400 opacity-10 font-extrabold font-display z-0"
+      class="fixed top-12 md:top-0 right-0 text-[15vw] leading-none text-mauve-400 opacity-10 font-extrabold font-display z-0"
     >
       About<br />
       Author
@@ -54,7 +54,11 @@
     <!-- Content -->
     <div class="relative py-10 md:py-12 z-10">
       <div class="flex flex-col md:flex-row text-mauve-700 leading-8 px-5 md:px-10 gap-3 md:gap-0">
-        <h2 class="md:w-1/5 text-sm text-mauve-400 tracking-widest uppercase md:text-base md:text-mauve-700 md:normal-case md:tracking-normal">Message</h2>
+        <h2
+          class="md:w-1/5 text-sm text-mauve-400 tracking-widest uppercase md:text-base md:text-mauve-700 md:normal-case md:tracking-normal"
+        >
+          Message
+        </h2>
         <div class="md:w-4/5">
           <p class="text-mauve-600" v-html="message"></p>
           <p class="text-mauve-400 text-xs leading-[2.5] mt-2" v-html="messageEn"></p>
@@ -70,7 +74,11 @@
 
       <!-- Info cards -->
       <div class="flex flex-col md:flex-row text-mauve-700 px-5 md:px-10 gap-3 md:gap-0">
-        <h2 class="md:w-1/5 text-sm text-mauve-400 tracking-widest uppercase md:text-base md:text-mauve-700 md:normal-case md:tracking-normal">Information</h2>
+        <h2
+          class="md:w-1/5 text-sm text-mauve-400 tracking-widest uppercase md:text-base md:text-mauve-700 md:normal-case md:tracking-normal"
+        >
+          Information
+        </h2>
         <div class="md:w-4/5 grid grid-cols-1 sm:grid-cols-2 gap-4">
           <div
             v-for="card in infoCards"

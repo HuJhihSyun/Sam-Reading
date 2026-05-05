@@ -30,7 +30,7 @@
   // ── Article data ──────────────────────────────────────────────
   const articles = ref(null as Article[] | null)
 
-  const { data: articleData } = await useAsyncData(`articles`, () => getArticle())
+  const { data: articleData } = await useAsyncData(`articles`, () => getArticle(true))
 
   articles.value = (articleData.value?.data as Article[]) || []
 

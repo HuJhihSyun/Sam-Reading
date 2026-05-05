@@ -25,7 +25,7 @@
   const fetchArticles = async () => {
     isLoading.value = true
     try {
-      const res: any = await getArticle()
+      const res: any = await getArticle(true)
       articles.value = res.data || []
     } catch (error) {
       console.error('Error fetching articles:', error)

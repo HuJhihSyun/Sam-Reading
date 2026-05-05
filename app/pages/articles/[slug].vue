@@ -12,7 +12,7 @@
 
   const article = ref(null as Article | null)
 
-  const { data: articleData } = await useAsyncData(`article-${slug}`, () => getArticleBySlug(slug))
+  const { data: articleData } = await useAsyncData(`article-${slug}`, () => getArticleBySlug(slug, true))
 
   article.value = articleData.value?.data || null
 

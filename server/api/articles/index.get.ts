@@ -1,8 +1,10 @@
 import Article from '~~/server/models/Article'
 
-export default defineEventHandler(async () => {
+export default defineEventHandler(async (event) => {
   try {
-    const articles = await Article.find().sort({ updatedAt: -1 }).lean()
+    const { status } = getQuery(event)
+    const filter = status ? { status } : {}
+    const articles = await Article.find(filter).sort({ updatedAt: -1 }).lean()
 
     return {
       status: {

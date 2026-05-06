@@ -21,6 +21,14 @@
   article.value = articleData.value?.data || null
 
   const about = aboutData.value
+
+  onMounted(async () => {
+    if (!article.value) return
+    try {
+      const res = await $fetch<{ views: number }>(`/api/articles/${slug}/view`, { method: 'POST' })
+      if (article.value) article.value.views = res.views
+    } catch {}
+  })
   const recentArticles = computed(() =>
     (recentData.value?.data || []).filter((a: Article) => a.slug !== slug).slice(0, 4)
   )
@@ -74,7 +82,7 @@
           <div class="flex items-center gap-3 mt-3 text-xs text-white/60">
             <span>{{ article.publishDate }}</span>
             <span class="text-white/30">·</span>
-            <span>{{ article.readTime || 0 }} 閱讀</span>
+            <span>{{ article.views ?? 0 }} 次瀏覽</span>
           </div>
         </div>
       </div>
@@ -98,7 +106,7 @@
           <div class="flex items-center gap-3 mt-2 text-xs text-mauve-400">
             <span>{{ article.publishDate }}</span>
             <span class="text-petal-200">·</span>
-            <span>{{ article.readTime || 0 }} 閱讀</span>
+            <span>{{ article.views ?? 0 }} 次瀏覽</span>
           </div>
         </div>
       </div>

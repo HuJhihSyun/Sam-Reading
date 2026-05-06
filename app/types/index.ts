@@ -10,6 +10,7 @@ export interface Article {
   content: string
   status: ArticleStatus
   coverImage?: string
+  views?: number
   createdAt: string
   updatedAt: string
   readTime?: number | string

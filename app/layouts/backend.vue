@@ -8,7 +8,8 @@
     { path: '/backend', label: 'Dashboard', icon: '◈', exact: true },
     { path: '/backend/articles', label: '文章管理', icon: '✦' },
     { path: '/backend/about', label: '關於作者', icon: '◎' },
-    { path: '/backend/contacts', label: '聯絡訊息', icon: '◇' }
+    { path: '/backend/contacts', label: '聯絡訊息', icon: '◇' },
+    { path: '/backend/images', label: '圖檔管理', icon: '▣' }
   ]
 
   const isActive = (item: { path: string; exact?: boolean }) => {

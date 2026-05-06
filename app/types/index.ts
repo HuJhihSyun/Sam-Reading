@@ -44,6 +44,20 @@ export interface AboutData {
   updatedAt?: string
 }
 
+export interface ImageUsage {
+  type: 'cover' | 'inline' | 'avatar'
+  title: string
+  slug?: string
+}
+
+export interface ImageFile {
+  key: string
+  url: string
+  size: number
+  lastModified: string
+  usedIn: ImageUsage[]
+}
+
 export interface SiteConfig {
   name: string
   shortName: string

@@ -82,7 +82,7 @@
         <button
           v-for="opt in [
             { value: 'all', label: '全部' },
-            { value: 'published', label: '已發布' },
+            { value: 'published', label: '已發佈' },
             { value: 'draft', label: '草稿' }
           ]"
           :key="opt.value"
@@ -105,42 +105,41 @@
     <div class="bg-neutral-800/40 border border-neutral-700 rounded-xl overflow-hidden">
       <table class="w-full">
         <thead>
-          <tr class="border-b border-neutral-700 text-left">
-            <th class="px-5 py-3 text-xs text-neutral-500 font-normal tracking-widest uppercase">標題</th>
-            <th class="px-5 py-3 text-xs text-neutral-500 font-normal tracking-widest uppercase">狀態</th>
-            <th class="px-5 py-3 text-xs text-neutral-500 font-normal tracking-widest uppercase">標籤</th>
-            <th class="px-5 py-3 text-xs text-neutral-500 font-normal tracking-widest uppercase">上架日期</th>
-            <th class="px-5 py-3 text-xs text-neutral-500 font-normal tracking-widest uppercase">更新時間</th>
-            <th class="px-5 py-3 text-xs text-neutral-500 font-normal tracking-widest uppercase w-24">操作</th>
+          <tr class="border-b border-neutral-700 text-center whitespace-nowrap">
+            <th class="px-3 lg:px-4 py-3 text-xs text-neutral-500 font-normal tracking-widest uppercase text-left">
+              標題
+            </th>
+            <th class="px-3 lg:px-4 py-3 text-xs text-neutral-500 font-normal tracking-widest uppercase">狀態</th>
+            <th class="px-3 lg:px-4 py-3 text-xs text-neutral-500 font-normal tracking-widest uppercase">瀏覽</th>
+            <th class="px-3 lg:px-4 py-3 text-xs text-neutral-500 font-normal tracking-widest uppercase">標籤</th>
+            <th class="px-3 lg:px-4 py-3 text-xs text-neutral-500 font-normal tracking-widest uppercase">上架日期</th>
+            <th class="px-3 lg:px-4 py-3 text-xs text-neutral-500 font-normal tracking-widest uppercase">更新時間</th>
+            <th class="px-3 lg:px-4 py-3 text-xs text-neutral-500 font-normal tracking-widest uppercase w-24">操作</th>
           </tr>
         </thead>
         <tbody>
           <template v-if="isLoading">
-            <tr
-              v-for="i in 8"
-              :key="i"
-              class="border-b border-neutral-700/50 last:border-0 animate-pulse"
-            >
-              <td class="px-5 py-3.5">
+            <tr v-for="i in 8" :key="i" class="border-b border-neutral-700/50 last:border-0 animate-pulse">
+              <td class="px-3 lg:px-4 py-3.5">
                 <div class="h-4 bg-neutral-700 rounded-full w-3/4 mb-1.5" />
                 <div class="h-3 bg-neutral-700/50 rounded-full w-1/2" />
               </td>
-              <td class="px-5 py-3.5">
+              <td class="px-3 lg:px-4 py-3.5">
                 <div class="h-4 bg-neutral-700 rounded-full w-12" />
               </td>
-              <td class="px-5 py-3.5">
+              <td class="px-3 lg:px-4 py-3.5">
                 <div class="flex gap-1">
                   <div class="h-4 bg-neutral-700 rounded w-10" />
                   <div class="h-4 bg-neutral-700/60 rounded w-8" />
                 </div>
               </td>
-              <td class="px-5 py-3.5">
+              <td class="px-3 lg:px-4 py-3.5">
                 <div class="h-3 bg-neutral-700/60 rounded-full w-20" />
               </td>
-              <td class="px-5 py-3.5">
+              <td class="px-3 lg:px-4 py-3.5">
                 <div class="h-3 bg-neutral-700/40 rounded-full w-20" />
               </td>
-              <td class="px-5 py-3.5">
+              <td class="px-3 lg:px-4 py-3.5">
                 <div class="h-3 bg-neutral-700/40 rounded-full w-12" />
               </td>
             </tr>
@@ -151,7 +150,7 @@
               :key="article.id"
               class="border-b border-neutral-700/50 last:border-0 hover:bg-neutral-700/20 transition-colors group"
             >
-              <td class="px-5 py-3.5">
+              <td class="px-3 lg:px-4 py-3.5">
                 <NuxtLink
                   :to="`/backend/articles/${article.slug}`"
                   class="text-sm text-neutral-200 group-hover:text-white transition-colors line-clamp-1"
@@ -160,33 +159,44 @@
                 </NuxtLink>
                 <p class="text-xs text-neutral-600 mt-0.5 truncate max-w-xs">{{ article.excerpt }}</p>
               </td>
-              <td class="px-5 py-3.5">
-                <span
-                  class="text-[10px] px-2 py-0.5 rounded-full whitespace-nowrap"
-                  :class="
-                    article.status === 'published'
-                      ? 'bg-emerald-900/50 text-emerald-400'
-                      : 'bg-amber-900/50 text-amber-400'
-                  "
-                >
-                  {{ article.status === 'published' ? '已發布' : '草稿' }}
-                </span>
+              <td class="px-3 lg:px-4 py-3.5">
+                <div class="flex justify-center items-center">
+                  <span
+                    class="text-[10px] px-2 py-0.5 rounded-full whitespace-nowrap"
+                    :class="
+                      article.status === 'published'
+                        ? 'bg-emerald-900/50 text-emerald-400'
+                        : 'bg-amber-900/50 text-amber-400'
+                    "
+                  >
+                    {{ article.status === 'published' ? '已發佈' : '待發佈' }}
+                  </span>
+                </div>
               </td>
-              <td class="px-5 py-3.5">
-                <div class="flex flex-wrap gap-1">
+              <td class="px-3 lg:px-4 py-3.5">
+                <div class="flex justify-center items-center">
+                  <span class="text-xs text-neutral-500">{{ article.views || 0 }}</span>
+                </div>
+              </td>
+              <td class="px-3 lg:px-4 py-3.5">
+                <div class="flex justify-center items-center flex-wrap gap-1">
                   <span
                     v-for="tag in article.tags"
                     :key="tag"
-                    class="text-[10px] px-1.5 py-0.5 bg-neutral-700/60 text-neutral-400 rounded"
+                    class="text-[10px] px-1.5 py-0.5 bg-neutral-700/60 text-neutral-400 rounded whitespace-nowrap"
                   >
                     {{ tag }}
                   </span>
                 </div>
               </td>
-              <td class="px-5 py-3.5 text-xs text-neutral-500">{{ formatDate(article.publishDate) }}</td>
-              <td class="px-5 py-3.5 text-xs text-neutral-600">{{ formatDate(article.updatedAt) }}</td>
-              <td class="px-5 py-3.5">
-                <div class="flex items-center gap-2">
+              <td class="px-3 lg:px-4 py-3.5 text-xs text-center text-neutral-500">
+                {{ formatDate(article.publishDate) }}
+              </td>
+              <td class="px-3 lg:px-4 py-3.5 text-xs text-center text-neutral-600">
+                {{ formatDate(article.updatedAt) }}
+              </td>
+              <td class="px-3 lg:px-4 py-3.5">
+                <div class="flex justify-center items-center gap-2">
                   <NuxtLink
                     :to="`/backend/articles/${article.slug}`"
                     class="text-xs text-neutral-400 hover:text-white transition-colors"
@@ -203,7 +213,7 @@
               </td>
             </tr>
             <tr v-if="filtered.length === 0">
-              <td colspan="6" class="px-5 py-12 text-center text-sm text-neutral-600">沒有找到符合的文章</td>
+              <td colspan="6" class="px-3 lg:px-4 py-12 text-center text-sm text-neutral-600">沒有找到符合的文章</td>
             </tr>
           </template>
         </tbody>

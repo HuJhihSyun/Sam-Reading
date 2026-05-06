@@ -47,6 +47,10 @@
 
   const publishedCount = computed(() => articles.value.filter((a) => a.status === 'published').length)
   const draftCount = computed(() => articles.value.filter((a) => a.status === 'draft').length)
+  const totalViews = computed(() => {
+    const published = articles.value.filter((a) => a.status === 'published')
+    return published.reduce((sum, a) => sum + (a.views || 0), 0)
+  })
 
   const recentArticles = computed(() =>
     [...articles.value].sort((a, b) => new Date(b.updatedAt).getTime() - new Date(a.updatedAt).getTime()).slice(0, 5)
@@ -67,7 +71,7 @@
     <p class="text-sm text-neutral-500 mb-8">歡迎回來，Samantha</p>
 
     <!-- Stats row -->
-    <div class="grid grid-cols-4 gap-4 mb-10">
+    <div class="grid grid-cols-4 gap-4 mb-6">
       <template v-if="isLoading">
         <div v-for="i in 4" :key="i" class="bg-neutral-800/60 border border-neutral-700 rounded-xl p-5 animate-pulse">
           <div class="h-3 bg-neutral-700 rounded-full w-16 mb-4" />
@@ -80,12 +84,16 @@
           <p class="text-3xl font-light text-white">{{ articles.length }}</p>
         </div>
         <div class="bg-neutral-800/60 border border-neutral-700 rounded-xl p-5">
-          <p class="text-xs text-neutral-500 tracking-widest uppercase mb-3">已發布</p>
+          <p class="text-xs text-neutral-500 tracking-widest uppercase mb-3">已發佈</p>
           <p class="text-3xl font-light text-emerald-400">{{ publishedCount }}</p>
         </div>
         <div class="bg-neutral-800/60 border border-neutral-700 rounded-xl p-5">
           <p class="text-xs text-neutral-500 tracking-widest uppercase mb-3">草稿</p>
           <p class="text-3xl font-light text-amber-400">{{ draftCount }}</p>
+        </div>
+        <div class="bg-neutral-800/60 border border-neutral-700 rounded-xl p-5">
+          <p class="text-xs text-neutral-500 tracking-widest uppercase mb-3">總瀏覽數</p>
+          <p class="text-3xl font-light text-blue-400">{{ totalViews }}</p>
         </div>
         <div class="bg-neutral-800/60 border border-neutral-700 rounded-xl p-5">
           <p class="text-xs text-neutral-500 tracking-widest uppercase mb-3">未讀訊息</p>
@@ -119,7 +127,7 @@
                 article.status === 'published' ? 'bg-emerald-900/50 text-emerald-400' : 'bg-amber-900/50 text-amber-400'
               "
             >
-              {{ article.status === 'published' ? '已發布' : '草稿' }}
+              {{ article.status === 'published' ? '已發佈' : '待發佈' }}
             </span>
             <NuxtLink
               :to="`/backend/articles/${article.slug}`"

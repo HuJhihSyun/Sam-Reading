@@ -94,13 +94,13 @@
           <p v-if="errors.publishDate" class="text-xs text-rose-400 mt-1">{{ errors.publishDate }}</p>
         </div>
         <div>
-          <label class="block text-xs text-neutral-400 mb-2 tracking-widest uppercase">發布狀態</label>
+          <label class="block text-xs text-neutral-400 mb-2 tracking-widest uppercase">發佈狀態</label>
           <select
             v-model="form.status"
             class="w-full px-4 py-3 bg-neutral-800 border border-neutral-700 rounded-lg text-white text-sm focus:outline-none focus:border-neutral-500 transition-colors"
           >
             <option value="draft">草稿</option>
-            <option value="published">發布</option>
+            <option value="published">發佈</option>
           </select>
         </div>
       </div>

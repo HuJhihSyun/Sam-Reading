@@ -1,5 +1,12 @@
 export type ArticleStatus = 'draft' | 'published'
 
+export interface ArticleComment {
+  _id?: string
+  name: string
+  content: string
+  createdAt: string
+}
+
 export interface Article {
   id: string
   title: string
@@ -11,6 +18,7 @@ export interface Article {
   status: ArticleStatus
   coverImage?: string
   views?: number
+  comments?: ArticleComment[]
   createdAt: string
   updatedAt: string
   readTime?: number | string

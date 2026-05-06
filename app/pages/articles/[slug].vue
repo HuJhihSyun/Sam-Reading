@@ -22,13 +22,54 @@
 
   const about = aboutData.value
 
+  const commentName = ref('')
+  const commentContent = ref('')
+  const commentSubmitting = ref(false)
+  const commentError = ref('')
+  const commentSuccess = ref(false)
+  const comments = ref(article.value?.comments || [])
+
   onMounted(async () => {
+    const saved = localStorage.getItem('commenter_name')
+    if (saved) commentName.value = saved
+
     if (!article.value) return
     try {
       const res = await $fetch<{ views: number }>(`/api/articles/${slug}/view`, { method: 'POST' })
       if (article.value) article.value.views = res.views
     } catch {}
   })
+
+  async function submitComment() {
+    commentError.value = ''
+    const name = commentName.value.trim()
+    const content = commentContent.value.trim()
+    if (!name || !content) {
+      commentError.value = '請填寫名稱與留言內容'
+      return
+    }
+    commentSubmitting.value = true
+    try {
+      const res = await $fetch<{ comment: any }>(`/api/articles/${slug}/comments`, {
+        method: 'POST',
+        body: { name, content }
+      })
+      localStorage.setItem('commenter_name', name)
+      comments.value = [...comments.value, res.comment]
+      commentContent.value = ''
+      commentSuccess.value = true
+      setTimeout(() => { commentSuccess.value = false }, 3000)
+    } catch {
+      commentError.value = '送出失敗，請稍後再試'
+    } finally {
+      commentSubmitting.value = false
+    }
+  }
+
+  function formatCommentDate(d: string) {
+    return new Date(d).toLocaleDateString('zh-TW', { year: 'numeric', month: '2-digit', day: '2-digit', hour: '2-digit', minute: '2-digit' })
+  }
+
   const recentArticles = computed(() =>
     (recentData.value?.data || []).filter((a: Article) => a.slug !== slug).slice(0, 4)
   )
@@ -135,7 +176,47 @@
               <div class="flex-1 h-px bg-petal-100" />
             </div>
             <p class="text-center text-xs text-mauve-300 tracking-widest">感謝閱讀</p>
+
+            <!-- ── Comments ──────────────────────────────── -->
+            <section class="mt-8">
+              <!-- Comment form -->
+              <div class="">
+                <div class="flex flex-col md:flex-row gap-4 mb-4">
+                  <div class="sm:w-48">
+                    <label class="block text-[10px] tracking-widest text-mauve-400 uppercase mb-1.5">名稱</label>
+                    <input
+                      v-model="commentName"
+                      type="text"
+                      placeholder="你的名字"
+                      class="w-full px-3 py-2 text-xs bg-white border border-petal-200 rounded-lg text-mauve-700 placeholder-mauve-300 focus:outline-none focus:border-petal-400 transition-colors"
+                    />
+                  </div>
+                  <div class="flex-1">
+                    <label class="block text-[10px] tracking-widest text-mauve-400 uppercase mb-1.5">留言內容</label>
+                    <textarea
+                      v-model="commentContent"
+                      rows="1"
+                      placeholder="分享你的想法…"
+                      class="w-full px-3 py-2 text-xs bg-white border border-petal-200 rounded-lg text-mauve-700 placeholder-mauve-300 focus:outline-none focus:border-petal-400 transition-colors resize-none"
+                    />
+                  </div>
+                </div>
+                <div class="flex items-center justify-between gap-4">
+                  <p v-if="commentError" class="text-xs text-rose-400">{{ commentError }}</p>
+                  <p v-else-if="commentSuccess" class="text-xs text-emerald-500">留言已送出，謝謝！</p>
+                  <span v-else />
+                  <button
+                    :disabled="commentSubmitting"
+                    class="px-5 py-2 text-xs bg-petal-400 hover:bg-petal-500 disabled:opacity-50 text-white rounded-lg transition-colors tracking-wide"
+                    @click="submitComment"
+                  >
+                    {{ commentSubmitting ? '送出中…' : '送出留言' }}
+                  </button>
+                </div>
+              </div>
+            </section>
           </article>
+
           <!-- ── Sidebar ──────────────────────────────────────── -->
           <aside class="w-full sm:w-1/3 2xl:w-1/5">
             <div class="space-y-8">
@@ -175,6 +256,26 @@
                   >{{ tag }}</span>
                 </div>
               </div>
+
+              <!-- Divider -->
+              <div class="h-px bg-petal-100" />
+
+              <!-- Existing comments -->
+              <ul v-if="comments.length" class="space-y-6 mb-10">
+                <p class="text-[9px] tracking-[0.4em] text-mauve-300 uppercase mb-4">Comments</p>
+                <li v-for="c in comments" :key="(c as any)._id || c.createdAt" class="flex gap-3">
+                  <div class="w-8 h-8 rounded-full bg-petal-100 border border-petal-200 flex items-center justify-center shrink-0 mt-0.5">
+                    <span class="text-xs font-display text-petal-500">{{ c.name.charAt(0) }}</span>
+                  </div>
+                  <div class="flex-1 min-w-0">
+                    <div class="flex items-baseline gap-2 mb-1">
+                      <span class="text-xs font-medium text-mauve-700">{{ c.name }}</span>
+                      <time class="text-[10px] text-mauve-300">{{ formatCommentDate(c.createdAt) }}</time>
+                    </div>
+                    <p class="text-xs text-mauve-400 whitespace-pre-wrap">{{ c.content }}</p>
+                  </div>
+                </li>
+              </ul>
 
               <!-- Divider -->
               <div class="h-px bg-petal-100" />

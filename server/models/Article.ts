@@ -1,5 +1,11 @@
 import mongoose, { Schema, Document, Model } from 'mongoose'
 
+export interface IComment {
+  name: string
+  content: string
+  createdAt: Date
+}
+
 export interface IArticle extends Document {
   title: string
   slug: string
@@ -10,7 +16,17 @@ export interface IArticle extends Document {
   status: 'draft' | 'published'
   coverImage?: string
   views: number
+  comments: IComment[]
 }
+
+const CommentSchema = new Schema<IComment>(
+  {
+    name: { type: String, required: true },
+    content: { type: String, required: true },
+    createdAt: { type: Date, default: Date.now }
+  },
+  { _id: true }
+)
 
 const ArticleSchema = new Schema<IArticle>(
   {
@@ -22,7 +38,8 @@ const ArticleSchema = new Schema<IArticle>(
     content: { type: String, default: '' },
     status: { type: String, enum: ['draft', 'published'], default: 'draft' },
     coverImage: { type: String, default: '' },
-    views: { type: Number, default: 0 }
+    views: { type: Number, default: 0 },
+    comments: { type: [CommentSchema], default: [] }
   },
   { timestamps: true }
 )

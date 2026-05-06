@@ -184,7 +184,7 @@
     <div class="flex items-center gap-4">
       <!-- Preview -->
       <div
-        class="w-20 h-20 rounded-lg overflow-hidden border border-neutral-700 bg-neutral-800 flex items-center justify-center shrink-0"
+        class="w-20 h-20 rounded-full overflow-hidden border border-neutral-700 bg-neutral-800 flex items-center justify-center shrink-0"
       >
         <img v-if="modelValue" :src="modelValue" class="w-full h-full object-cover" alt="作者頭像" />
         <span v-else class="text-neutral-600 text-xs text-center px-1">尚未設定</span>
@@ -194,7 +194,7 @@
       <div class="flex flex-col gap-2">
         <button
           type="button"
-          class="px-4 py-2 text-xs bg-neutral-700 hover:bg-neutral-600 text-white rounded-lg transition-colors"
+          class="px-4 py-1.5 text-xs bg-neutral-700 hover:bg-neutral-600 text-white rounded-lg transition-colors"
           @click="pickFile"
         >
           {{ modelValue ? '更換頭像' : '上傳頭像' }}
@@ -202,7 +202,7 @@
         <button
           v-if="modelValue"
           type="button"
-          class="text-xs text-neutral-500 hover:text-rose-400 transition-colors text-left"
+          class="px-4 py-1.5 text-xs border border-neutral-700 hover:border-neutral-600 rounded-lg text-neutral-500 hover:text-neutral-400 transition-colors text-left"
           @click="emit('update:modelValue', '')"
         >
           移除頭像

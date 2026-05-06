@@ -68,22 +68,30 @@
 
     <!-- Stats row -->
     <div class="grid grid-cols-4 gap-4 mb-10">
-      <div class="bg-neutral-800/60 border border-neutral-700 rounded-xl p-5">
-        <p class="text-xs text-neutral-500 tracking-widest uppercase mb-3">全部文章</p>
-        <p class="text-3xl font-light text-white">{{ articles.length }}</p>
-      </div>
-      <div class="bg-neutral-800/60 border border-neutral-700 rounded-xl p-5">
-        <p class="text-xs text-neutral-500 tracking-widest uppercase mb-3">已發布</p>
-        <p class="text-3xl font-light text-emerald-400">{{ publishedCount }}</p>
-      </div>
-      <div class="bg-neutral-800/60 border border-neutral-700 rounded-xl p-5">
-        <p class="text-xs text-neutral-500 tracking-widest uppercase mb-3">草稿</p>
-        <p class="text-3xl font-light text-amber-400">{{ draftCount }}</p>
-      </div>
-      <div class="bg-neutral-800/60 border border-neutral-700 rounded-xl p-5">
-        <p class="text-xs text-neutral-500 tracking-widest uppercase mb-3">未讀訊息</p>
-        <p class="text-3xl font-light text-rose-400">{{ unread }}</p>
-      </div>
+      <template v-if="isLoading">
+        <div v-for="i in 4" :key="i" class="bg-neutral-800/60 border border-neutral-700 rounded-xl p-5 animate-pulse">
+          <div class="h-3 bg-neutral-700 rounded-full w-16 mb-4" />
+          <div class="h-8 bg-neutral-700 rounded-full w-12" />
+        </div>
+      </template>
+      <template v-else>
+        <div class="bg-neutral-800/60 border border-neutral-700 rounded-xl p-5">
+          <p class="text-xs text-neutral-500 tracking-widest uppercase mb-3">全部文章</p>
+          <p class="text-3xl font-light text-white">{{ articles.length }}</p>
+        </div>
+        <div class="bg-neutral-800/60 border border-neutral-700 rounded-xl p-5">
+          <p class="text-xs text-neutral-500 tracking-widest uppercase mb-3">已發布</p>
+          <p class="text-3xl font-light text-emerald-400">{{ publishedCount }}</p>
+        </div>
+        <div class="bg-neutral-800/60 border border-neutral-700 rounded-xl p-5">
+          <p class="text-xs text-neutral-500 tracking-widest uppercase mb-3">草稿</p>
+          <p class="text-3xl font-light text-amber-400">{{ draftCount }}</p>
+        </div>
+        <div class="bg-neutral-800/60 border border-neutral-700 rounded-xl p-5">
+          <p class="text-xs text-neutral-500 tracking-widest uppercase mb-3">未讀訊息</p>
+          <p class="text-3xl font-light text-rose-400">{{ unread }}</p>
+        </div>
+      </template>
     </div>
 
     <!-- Two columns -->
@@ -96,7 +104,14 @@
             >查看全部 →</NuxtLink
           >
         </div>
-        <ul class="space-y-3">
+        <ul v-if="isLoading" class="space-y-3 animate-pulse">
+          <li v-for="i in 5" :key="i" class="flex items-center gap-3">
+            <div class="h-4 bg-neutral-700 rounded w-12 shrink-0" />
+            <div class="h-4 bg-neutral-700 rounded flex-1" />
+            <div class="h-3 bg-neutral-700/60 rounded w-10 shrink-0" />
+          </li>
+        </ul>
+        <ul v-else class="space-y-3">
           <li v-for="article in recentArticles" :key="article.id" class="flex items-center gap-3 group">
             <span
               class="text-[10px] px-1.5 py-0.5 rounded"
@@ -131,7 +146,17 @@
             >查看全部 →</NuxtLink
           >
         </div>
-        <ul class="space-y-4">
+        <ul v-if="isLoading" class="space-y-4 animate-pulse">
+          <li v-for="i in 3" :key="i" class="border-b border-neutral-700/50 pb-4 last:border-0 last:pb-0">
+            <div class="flex items-center gap-2 mb-2">
+              <div class="h-3 bg-neutral-700 rounded w-20" />
+              <div class="h-3 bg-neutral-700/50 rounded w-12 ml-auto" />
+            </div>
+            <div class="h-3 bg-neutral-700/60 rounded w-full mb-1.5" />
+            <div class="h-3 bg-neutral-700/40 rounded w-3/4" />
+          </li>
+        </ul>
+        <ul v-else class="space-y-4">
           <li
             v-for="msg in recentContacts"
             :key="msg.id"

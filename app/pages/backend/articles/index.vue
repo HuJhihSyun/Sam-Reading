@@ -65,7 +65,8 @@
     <div class="flex items-start justify-between mb-8">
       <div>
         <h1 class="text-xl font-semibold text-white mb-1">文章管理</h1>
-        <p class="text-sm text-neutral-500">共 {{ articles.length }} 篇文章</p>
+        <div v-if="isLoading" class="h-4 bg-neutral-700 rounded-full w-24 mt-1 animate-pulse" />
+        <p v-else class="text-sm text-neutral-500">共 {{ articles.length }} 篇文章</p>
       </div>
       <NuxtLink
         to="/backend/articles/new"
@@ -114,65 +115,97 @@
           </tr>
         </thead>
         <tbody>
-          <tr
-            v-for="article in filtered"
-            :key="article.id"
-            class="border-b border-neutral-700/50 last:border-0 hover:bg-neutral-700/20 transition-colors group"
-          >
-            <td class="px-5 py-3.5">
-              <NuxtLink
-                :to="`/backend/articles/${article.slug}`"
-                class="text-sm text-neutral-200 group-hover:text-white transition-colors line-clamp-1"
-              >
-                {{ article.title }}
-              </NuxtLink>
-              <p class="text-xs text-neutral-600 mt-0.5 truncate max-w-xs">{{ article.excerpt }}</p>
-            </td>
-            <td class="px-5 py-3.5">
-              <span
-                class="text-[10px] px-2 py-0.5 rounded-full whitespace-nowrap"
-                :class="
-                  article.status === 'published'
-                    ? 'bg-emerald-900/50 text-emerald-400'
-                    : 'bg-amber-900/50 text-amber-400'
-                "
-              >
-                {{ article.status === 'published' ? '已發布' : '草稿' }}
-              </span>
-            </td>
-            <td class="px-5 py-3.5">
-              <div class="flex flex-wrap gap-1">
-                <span
-                  v-for="tag in article.tags"
-                  :key="tag"
-                  class="text-[10px] px-1.5 py-0.5 bg-neutral-700/60 text-neutral-400 rounded"
-                >
-                  {{ tag }}
-                </span>
-              </div>
-            </td>
-            <td class="px-5 py-3.5 text-xs text-neutral-500">{{ formatDate(article.publishDate) }}</td>
-            <td class="px-5 py-3.5 text-xs text-neutral-600">{{ formatDate(article.updatedAt) }}</td>
-            <td class="px-5 py-3.5">
-              <div class="flex items-center gap-2">
+          <template v-if="isLoading">
+            <tr
+              v-for="i in 8"
+              :key="i"
+              class="border-b border-neutral-700/50 last:border-0 animate-pulse"
+            >
+              <td class="px-5 py-3.5">
+                <div class="h-4 bg-neutral-700 rounded-full w-3/4 mb-1.5" />
+                <div class="h-3 bg-neutral-700/50 rounded-full w-1/2" />
+              </td>
+              <td class="px-5 py-3.5">
+                <div class="h-4 bg-neutral-700 rounded-full w-12" />
+              </td>
+              <td class="px-5 py-3.5">
+                <div class="flex gap-1">
+                  <div class="h-4 bg-neutral-700 rounded w-10" />
+                  <div class="h-4 bg-neutral-700/60 rounded w-8" />
+                </div>
+              </td>
+              <td class="px-5 py-3.5">
+                <div class="h-3 bg-neutral-700/60 rounded-full w-20" />
+              </td>
+              <td class="px-5 py-3.5">
+                <div class="h-3 bg-neutral-700/40 rounded-full w-20" />
+              </td>
+              <td class="px-5 py-3.5">
+                <div class="h-3 bg-neutral-700/40 rounded-full w-12" />
+              </td>
+            </tr>
+          </template>
+          <template v-else>
+            <tr
+              v-for="article in filtered"
+              :key="article.id"
+              class="border-b border-neutral-700/50 last:border-0 hover:bg-neutral-700/20 transition-colors group"
+            >
+              <td class="px-5 py-3.5">
                 <NuxtLink
                   :to="`/backend/articles/${article.slug}`"
-                  class="text-xs text-neutral-400 hover:text-white transition-colors"
+                  class="text-sm text-neutral-200 group-hover:text-white transition-colors line-clamp-1"
                 >
-                  編輯
+                  {{ article.title }}
                 </NuxtLink>
-                <button
-                  class="text-xs text-neutral-600 hover:text-rose-400 transition-colors"
-                  @click="confirmDelete(article)"
+                <p class="text-xs text-neutral-600 mt-0.5 truncate max-w-xs">{{ article.excerpt }}</p>
+              </td>
+              <td class="px-5 py-3.5">
+                <span
+                  class="text-[10px] px-2 py-0.5 rounded-full whitespace-nowrap"
+                  :class="
+                    article.status === 'published'
+                      ? 'bg-emerald-900/50 text-emerald-400'
+                      : 'bg-amber-900/50 text-amber-400'
+                  "
                 >
-                  刪除
-                </button>
-              </div>
-            </td>
-          </tr>
-          <tr v-if="filtered.length === 0">
-            <td colspan="6" class="px-5 py-12 text-center text-sm text-neutral-600">沒有找到符合的文章</td>
-          </tr>
+                  {{ article.status === 'published' ? '已發布' : '草稿' }}
+                </span>
+              </td>
+              <td class="px-5 py-3.5">
+                <div class="flex flex-wrap gap-1">
+                  <span
+                    v-for="tag in article.tags"
+                    :key="tag"
+                    class="text-[10px] px-1.5 py-0.5 bg-neutral-700/60 text-neutral-400 rounded"
+                  >
+                    {{ tag }}
+                  </span>
+                </div>
+              </td>
+              <td class="px-5 py-3.5 text-xs text-neutral-500">{{ formatDate(article.publishDate) }}</td>
+              <td class="px-5 py-3.5 text-xs text-neutral-600">{{ formatDate(article.updatedAt) }}</td>
+              <td class="px-5 py-3.5">
+                <div class="flex items-center gap-2">
+                  <NuxtLink
+                    :to="`/backend/articles/${article.slug}`"
+                    class="text-xs text-neutral-400 hover:text-white transition-colors"
+                  >
+                    編輯
+                  </NuxtLink>
+                  <button
+                    class="text-xs text-neutral-600 hover:text-rose-400 transition-colors"
+                    @click="confirmDelete(article)"
+                  >
+                    刪除
+                  </button>
+                </div>
+              </td>
+            </tr>
+            <tr v-if="filtered.length === 0">
+              <td colspan="6" class="px-5 py-12 text-center text-sm text-neutral-600">沒有找到符合的文章</td>
+            </tr>
+          </template>
         </tbody>
       </table>
     </div>

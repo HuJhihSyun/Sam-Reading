@@ -80,7 +80,8 @@
     <div class="flex items-center justify-between mb-8">
       <div>
         <h1 class="text-xl font-semibold text-white mb-1">聯絡訊息</h1>
-        <p class="text-sm text-neutral-500">
+        <div v-if="isLoading" class="h-4 bg-neutral-700 rounded-full w-28 mt-1 animate-pulse" />
+        <p v-else class="text-sm text-neutral-500">
           共 {{ messages.length }} 則訊息
           <span v-if="unreadCount > 0" class="text-rose-400 ml-1">· {{ unreadCount }} 則未讀</span>
         </p>
@@ -103,28 +104,45 @@
     <div class="grid grid-cols-5 gap-6">
       <!-- Message list -->
       <div class="col-span-2 space-y-2">
-        <div v-if="filtered.length === 0" class="py-10 text-center text-sm text-neutral-600">沒有訊息</div>
-        <button
-          v-for="msg in filtered"
-          :key="msg.id"
-          class="w-full text-left p-4 rounded-xl border transition-all"
-          :class="
-            selected?.id === msg.id
-              ? 'bg-neutral-700/60 border-neutral-600'
-              : 'bg-neutral-800/40 border-neutral-700 hover:border-neutral-600'
-          "
-          @click="openMessage(msg)"
-        >
-          <div class="flex items-center gap-2 mb-1.5">
-            <span v-if="!msg.read" class="w-1.5 h-1.5 rounded-full bg-rose-400 shrink-0" />
-            <span class="text-sm font-medium text-neutral-200 flex-1 truncate">{{ msg.name }}</span>
-            <span class="text-xs text-neutral-600 shrink-0">
-              {{ new Date(msg.receivedAt).toLocaleDateString('zh-TW', { month: 'short', day: 'numeric' }) }}
-            </span>
+        <template v-if="isLoading">
+          <div
+            v-for="i in 3"
+            :key="i"
+            class="w-full p-4 rounded-xl border border-neutral-700 bg-neutral-800/40 animate-pulse"
+          >
+            <div class="flex items-center gap-2 mb-2">
+              <div class="h-3.5 bg-neutral-700 rounded-full flex-1" />
+              <div class="h-3 bg-neutral-700/60 rounded-full w-10 shrink-0" />
+            </div>
+            <div class="h-3 bg-neutral-700/60 rounded-full w-full mb-1.5" />
+            <div class="h-3 bg-neutral-700/40 rounded-full w-4/5 mb-2" />
+            <div class="h-2.5 bg-neutral-700/30 rounded-full w-1/2" />
           </div>
-          <p class="text-xs text-neutral-500 line-clamp-2 leading-5">{{ msg.message }}</p>
-          <p class="text-[10px] text-neutral-700 mt-1">{{ msg.email }}</p>
-        </button>
+        </template>
+        <template v-else>
+          <div v-if="filtered.length === 0" class="py-10 text-center text-sm text-neutral-600">沒有訊息</div>
+          <button
+            v-for="msg in filtered"
+            :key="msg.id"
+            class="w-full text-left p-4 rounded-xl border transition-all"
+            :class="
+              selected?.id === msg.id
+                ? 'bg-neutral-700/60 border-neutral-600'
+                : 'bg-neutral-800/40 border-neutral-700 hover:border-neutral-600'
+            "
+            @click="openMessage(msg)"
+          >
+            <div class="flex items-center gap-2 mb-1.5">
+              <span v-if="!msg.read" class="w-1.5 h-1.5 rounded-full bg-rose-400 shrink-0" />
+              <span class="text-sm font-medium text-neutral-200 flex-1 truncate">{{ msg.name }}</span>
+              <span class="text-xs text-neutral-600 shrink-0">
+                {{ new Date(msg.receivedAt).toLocaleDateString('zh-TW', { month: 'short', day: 'numeric' }) }}
+              </span>
+            </div>
+            <p class="text-xs text-neutral-500 line-clamp-2 leading-5">{{ msg.message }}</p>
+            <p class="text-[10px] text-neutral-700 mt-1">{{ msg.email }}</p>
+          </button>
+        </template>
       </div>
 
       <!-- Message detail -->

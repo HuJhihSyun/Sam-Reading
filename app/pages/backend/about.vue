@@ -70,7 +70,56 @@
       >
     </div>
 
-    <div v-if="data" class="space-y-8">
+    <!-- Loading skeleton -->
+    <div v-if="isLoading" class="space-y-8 animate-pulse">
+      <!-- Avatar skeleton -->
+      <div>
+        <div class="h-3 bg-neutral-700 rounded-full w-16 mb-3" />
+        <div class="w-24 h-24 bg-neutral-700 rounded-full" />
+      </div>
+      <!-- Name skeleton -->
+      <div>
+        <div class="h-3 bg-neutral-700 rounded-full w-12 mb-2" />
+        <div class="h-11 bg-neutral-800 border border-neutral-700 rounded-lg" />
+      </div>
+      <!-- Message ZH skeleton -->
+      <div>
+        <div class="h-3 bg-neutral-700 rounded-full w-32 mb-2" />
+        <div class="h-36 bg-neutral-800 border border-neutral-700 rounded-lg" />
+      </div>
+      <!-- Message EN skeleton -->
+      <div>
+        <div class="h-3 bg-neutral-700 rounded-full w-32 mb-2" />
+        <div class="h-36 bg-neutral-800 border border-neutral-700 rounded-lg" />
+      </div>
+      <!-- Info cards skeleton -->
+      <div>
+        <div class="h-3 bg-neutral-700 rounded-full w-20 mb-4" />
+        <div class="space-y-3">
+          <div v-for="i in 3" :key="i" class="flex gap-3 items-start bg-neutral-800/40 border border-neutral-700 rounded-lg p-4">
+            <div class="flex-1 grid grid-cols-3 gap-3">
+              <div class="h-8 bg-neutral-700 rounded-md" />
+              <div class="col-span-2 h-8 bg-neutral-700 rounded-md" />
+            </div>
+            <div class="w-4 h-4 bg-neutral-700 rounded mt-2" />
+          </div>
+        </div>
+      </div>
+      <!-- Interests skeleton -->
+      <div>
+        <div class="h-3 bg-neutral-700 rounded-full w-20 mb-2" />
+        <div class="h-11 bg-neutral-800 border border-neutral-700 rounded-lg" />
+        <div class="flex gap-2 mt-3">
+          <div v-for="i in 4" :key="i" class="h-5 bg-neutral-700 rounded-full w-12" />
+        </div>
+      </div>
+      <!-- Save button skeleton -->
+      <div class="pt-2">
+        <div class="h-10 bg-neutral-700 rounded-lg w-24" />
+      </div>
+    </div>
+
+    <div v-else-if="data" class="space-y-8">
       <!-- Avatar -->
       <div>
         <label class="block text-xs text-neutral-400 mb-3 tracking-widest uppercase">作者頭像 <span class="normal-case text-neutral-600">（1:1，顯示於前台側邊欄）</span></label>

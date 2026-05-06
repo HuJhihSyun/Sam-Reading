@@ -90,7 +90,31 @@
 
     <!-- Article list -->
     <div class="px-5 md:px-10 pb-12">
-      <TransitionGroup name="list" tag="div" class="space-y-4 mt-4">
+      <!-- Loading skeleton -->
+      <div v-if="isLoading" class="space-y-4 mt-4">
+        <div
+          v-for="i in 5"
+          :key="i"
+          class="p-6 rounded-2xl border border-petal-100 bg-white animate-pulse"
+        >
+          <div class="flex items-start justify-between gap-4">
+            <div class="flex-1 min-w-0">
+              <div class="h-5 bg-petal-100 rounded-full w-3/4 mb-3" />
+              <div class="h-4 bg-petal-50 rounded-full w-full mb-2" />
+              <div class="h-4 bg-petal-50 rounded-full w-2/3" />
+              <div class="flex items-center gap-3 mt-4">
+                <div class="h-3 bg-petal-100 rounded-full w-20" />
+                <div class="h-3 bg-petal-100 rounded-full w-12" />
+                <div class="h-3 bg-petal-100 rounded-full w-12" />
+              </div>
+            </div>
+            <div class="h-4 w-4 bg-petal-100 rounded-full mt-1 shrink-0" />
+          </div>
+        </div>
+      </div>
+
+      <!-- Article list -->
+      <TransitionGroup v-else name="list" tag="div" class="space-y-4 mt-4">
         <NuxtLink
           v-for="article in filtered"
           :key="article.slug"

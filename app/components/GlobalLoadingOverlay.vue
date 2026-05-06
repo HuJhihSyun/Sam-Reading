@@ -4,7 +4,7 @@
 
   const router = useRouter()
 
-  const isVisible = ref(false)
+  const isVisible = ref(true)
   const progress = ref(0)
   const currentMessage = ref('頁面整理中')
 

@@ -59,7 +59,8 @@ export default defineNuxtConfig({
         { property: 'og:locale', content: siteLocale },
         { property: 'og:image', content: siteOgImage },
         { name: 'twitter:card', content: 'summary' },
-        { name: 'author', content: siteAuthor }
+        { name: 'author', content: siteAuthor },
+        { name: 'google-site-verification', content: 'g1UQUm30_bqzScl7w19XmOYyZzOCd3HFXXGmQOJljPE' }
       ]
     }
   },

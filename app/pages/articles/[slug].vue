@@ -27,7 +27,7 @@
   const commentSubmitting = ref(false)
   const commentError = ref('')
   const commentSuccess = ref(false)
-  const comments = ref(article.value?.comments || [])
+  const comments = ref(article.value?.comments?.filter((c: any) => c.visible) || [])
 
   onMounted(async () => {
     const saved = localStorage.getItem('commenter_name')

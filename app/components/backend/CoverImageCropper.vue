@@ -191,7 +191,7 @@
         <div class="flex gap-2">
           <button
             type="button"
-            class="px-4 py-2 text-xs bg-neutral-700 hover:bg-neutral-600 text-white rounded-lg transition-colors"
+            class="px-3 py-2 text-xs bg-neutral-700 hover:bg-neutral-600 text-white rounded-lg transition-colors"
             @click="pickFile"
           >
             {{ modelValue ? '更換封面' : '上傳封面' }}
@@ -199,7 +199,7 @@
           <button
             v-if="modelValue"
             type="button"
-            class="px-4 py-2 text-xs text-neutral-500 hover:text-rose-400 transition-colors text-left"
+            class="px-3 py-2 text-xs text-neutral-500 hover:text-rose-400 transition-colors"
             @click="emit('update:modelValue', '')"
           >
             移除封面

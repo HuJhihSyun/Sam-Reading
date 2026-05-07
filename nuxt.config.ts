@@ -78,6 +78,10 @@ export default defineNuxtConfig({
     exclude: ['/backend/**']
   },
 
+  routeRules: {
+    '/api/about': { cache: { maxAge: 60 * 60 } }
+  },
+
   modules: ['nuxt-svgo-loader', '@nuxtjs/sitemap'],
 
   nitro: {

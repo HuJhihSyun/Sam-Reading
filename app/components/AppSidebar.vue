@@ -5,7 +5,7 @@
 
   const route = useRoute()
 
-  const { data: about } = await useAsyncData('about-sidebar', () => $fetch<AboutData>('/api/about'))
+  const { data: about } = await useAsyncData('about', () => $fetch<AboutData>('/api/about'))
 
   const navItems = [
     { path: '/', label: '首頁', icon: markRaw(PencilSvg), text: 'Home' },

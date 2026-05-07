@@ -17,7 +17,7 @@
     'Severely picky when it comes to what she reads.'
   ])
 
-  const { data: aboutData } = await useAsyncData<AboutData>(`about-data`, () => getAbout() as Promise<AboutData>)
+  const { data: aboutData } = await useAsyncData<AboutData>('about', () => getAbout() as Promise<AboutData>)
 
   message.value = aboutData.value?.message.replace(/\n/g, '<br />') ?? ''
   messageEn.value = aboutData.value?.messageEn.replace(/\n/g, '<br />') ?? ''

@@ -47,6 +47,8 @@ const ArticleSchema = new Schema<IArticle>(
   { timestamps: true }
 )
 
+ArticleSchema.index({ status: 1, updatedAt: -1 })
+
 const Article: Model<IArticle> =
   (mongoose.models.Article as Model<IArticle>) || mongoose.model<IArticle>('Article', ArticleSchema)
 

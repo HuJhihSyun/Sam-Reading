@@ -4,7 +4,10 @@ export default defineEventHandler(async (event) => {
   try {
     const { status } = getQuery(event)
     const filter = status ? { status } : {}
-    const articles = await Article.find(filter).sort({ updatedAt: -1 }).lean()
+    const articles = await Article.find(filter)
+      .select('-content -comments')
+      .sort({ updatedAt: -1 })
+      .lean()
 
     return {
       status: {

@@ -14,7 +14,7 @@
 
   const [{ data: articleData }, { data: aboutData }, { data: recentData }] = await Promise.all([
     useAsyncData(`article-${slug}`, () => getArticleBySlug(slug, true)),
-    useAsyncData('about-article-page', () => $fetch<AboutData>('/api/about')),
+    useAsyncData('about', () => $fetch<AboutData>('/api/about')),
     useAsyncData('articles-recent', () => getArticle(true))
   ])
 
@@ -106,7 +106,7 @@
   <div v-if="article" class="min-h-full">
     <!-- Header: cover image hero or canvas fallback -->
     <div v-if="article.coverImage" class="relative overflow-hidden h-56 lg:h-72 xl:h-88 bg-neutral-900">
-      <img :src="article.coverImage" :alt="article.title" class="w-full h-full object-cover object-center" />
+      <img :src="article.coverImage" :alt="article.title" fetchpriority="high" class="w-full h-full object-cover object-center" />
       <!-- gradient overlay -->
       <div class="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent" />
       <div class="absolute inset-0 flex items-end px-5 md:px-10 pb-8 md:pb-10">

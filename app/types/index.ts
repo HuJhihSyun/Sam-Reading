@@ -67,6 +67,14 @@ export interface ImageFile {
   usedIn: ImageUsage[]
 }
 
+export interface Comment {
+  id: string
+  name: string
+  content: string
+  visible: boolean
+  createdAt: string
+}
+
 export interface SiteConfig {
   name: string
   shortName: string

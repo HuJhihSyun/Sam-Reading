@@ -1,8 +1,10 @@
 import mongoose, { Schema, Document, Model } from 'mongoose'
 
 export interface IComment {
+  _id?: any
   name: string
   content: string
+  visible: boolean
   createdAt: Date
 }
 
@@ -23,6 +25,7 @@ const CommentSchema = new Schema<IComment>(
   {
     name: { type: String, required: true },
     content: { type: String, required: true },
+    visible: { type: Boolean, default: true },
     createdAt: { type: Date, default: Date.now }
   },
   { _id: true }

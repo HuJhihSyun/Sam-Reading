@@ -1,7 +1,9 @@
 <script setup lang="ts">
   import { useArticleApi } from '@/composables/api/useArticleApi'
-  import type { Article } from '@/types'
+  import { useCommentApi } from '@/composables/api/useCommentApi'
+  import type { Article, Comment } from '@/types'
   const { getArticleBySlug, getArticle, updateArticle } = useArticleApi()
+  const { getCommentsBySlug, toggleVisible, deleteComment } = useCommentApi()
 
   definePageMeta({ layout: 'backend' })
   useHead({ title: '編輯文章 — 後台管理' })
@@ -51,6 +53,7 @@
   onMounted(async () => {
     const slug = route.params.slug as string
     await fetchArticleBySlug(slug)
+    await fetchComments(slug)
   })
 
   useHead(computed(() => ({ title: article.value ? `編輯：${article.value.title} — 後台管理` : '編輯文章' })))
@@ -116,6 +119,50 @@
       .replace(/[^\w\-\u4e00-\u9fff]/g, '')
       .slice(0, 60)
   }
+
+  // \u2500\u2500 Comments \u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500
+  const comments = ref<Comment[]>([])
+  const commentsLoading = ref(false)
+  const togglingId = ref<string | null>(null)
+  const deletingId = ref<string | null>(null)
+
+  const fetchComments = async (slug: string) => {
+    commentsLoading.value = true
+    try {
+      const res = await getCommentsBySlug(slug)
+      comments.value = res.data ?? []
+    } catch {
+      comments.value = []
+    } finally {
+      commentsLoading.value = false
+    }
+  }
+
+  const handleToggle = async (comment: Comment) => {
+    const slug = route.params.slug as string
+    togglingId.value = comment.id
+    try {
+      const res = await toggleVisible(slug, comment.id, !comment.visible)
+      const idx = comments.value.findIndex((c) => c.id === comment.id)
+      if (idx !== -1) comments.value[idx] = res.data
+    } finally {
+      togglingId.value = null
+    }
+  }
+
+  const handleDelete = async (comment: Comment) => {
+    const slug = route.params.slug as string
+    if (!confirm(`\u78ba\u5b9a\u8981\u522a\u9664 ${comment.name} \u7684\u7559\u8a00\uff1f`)) return
+    deletingId.value = comment.id
+    try {
+      await deleteComment(slug, comment.id)
+      comments.value = comments.value.filter((c) => c.id !== comment.id)
+    } finally {
+      deletingId.value = null
+    }
+  }
+
+  const visibleCount = computed(() => comments.value.filter((c) => c.visible).length)
 </script>
 
 <template>
@@ -257,5 +304,94 @@
         </NuxtLink>
       </div>
     </form>
+
+    <!-- Comments section -->
+    <div class="mt-12">
+      <div class="flex items-center gap-3 mb-5">
+        <div class="flex-1 h-px bg-neutral-800" />
+        <h2 class="text-xs tracking-widest uppercase text-neutral-500">留言管理</h2>
+        <div class="flex-1 h-px bg-neutral-800" />
+      </div>
+
+      <!-- Summary -->
+      <div class="flex items-center gap-3 mb-4 text-xs text-neutral-500">
+        <span>共 {{ comments.length }} 則留言</span>
+        <span class="text-neutral-700">·</span>
+        <span class="text-emerald-500">{{ visibleCount }} 則顯示中</span>
+        <span class="text-neutral-700">·</span>
+        <span class="text-neutral-600">{{ comments.length - visibleCount }} 則已隱藏</span>
+      </div>
+
+      <!-- Loading -->
+      <div v-if="commentsLoading" class="py-10 text-center text-neutral-600 text-sm">載入留言中…</div>
+
+      <!-- Empty -->
+      <div v-else-if="comments.length === 0" class="py-10 text-center text-neutral-700 text-sm">
+        尚無留言
+      </div>
+
+      <!-- Comment list -->
+      <div v-else class="space-y-3">
+        <div
+          v-for="comment in comments"
+          :key="comment.id"
+          class="rounded-lg border px-5 py-4 transition-colors"
+          :class="comment.visible ? 'border-neutral-700 bg-neutral-900' : 'border-neutral-800 bg-neutral-900/40'"
+        >
+          <div class="flex items-start gap-3">
+            <!-- Visible indicator dot -->
+            <div class="mt-1.5 shrink-0">
+              <span
+                class="block w-2 h-2 rounded-full"
+                :class="comment.visible ? 'bg-emerald-500' : 'bg-neutral-600'"
+              />
+            </div>
+
+            <!-- Content -->
+            <div class="flex-1 min-w-0">
+              <div class="flex items-center gap-2 flex-wrap mb-1.5">
+                <span class="text-sm font-medium text-white">{{ comment.name }}</span>
+                <span class="text-neutral-700 text-xs">·</span>
+                <time class="text-xs text-neutral-600">
+                  {{ new Date(comment.createdAt).toLocaleString('zh-TW', { dateStyle: 'short', timeStyle: 'short' }) }}
+                </time>
+                <span
+                  class="ml-auto text-[10px] px-1.5 py-0.5 rounded-full"
+                  :class="comment.visible ? 'bg-emerald-900/40 text-emerald-500' : 'bg-neutral-800 text-neutral-500'"
+                >
+                  {{ comment.visible ? '顯示中' : '已隱藏' }}
+                </span>
+              </div>
+              <p class="text-sm text-neutral-300 leading-6 whitespace-pre-wrap break-words">{{ comment.content }}</p>
+            </div>
+
+            <!-- Actions -->
+            <div class="shrink-0 flex items-center gap-1.5">
+              <button
+                type="button"
+                class="px-3 py-1.5 text-xs rounded-md border transition-all"
+                :disabled="togglingId === comment.id"
+                :class="comment.visible
+                  ? 'border-neutral-700 text-neutral-400 hover:border-neutral-500 hover:text-neutral-200'
+                  : 'border-emerald-800 text-emerald-500 hover:border-emerald-600 hover:bg-emerald-900/20'"
+                @click="handleToggle(comment)"
+              >
+                <span v-if="togglingId === comment.id">…</span>
+                <span v-else>{{ comment.visible ? '隱藏' : '顯示' }}</span>
+              </button>
+              <button
+                type="button"
+                class="px-3 py-1.5 text-xs rounded-md border border-neutral-800 text-neutral-600 hover:border-rose-800 hover:text-rose-500 transition-all"
+                :disabled="deletingId === comment.id"
+                @click="handleDelete(comment)"
+              >
+                <span v-if="deletingId === comment.id">…</span>
+                <span v-else>刪除</span>
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
   </div>
 </template>

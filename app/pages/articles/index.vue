@@ -19,22 +19,9 @@
     twitterDescription: pageDescription
   })
 
-  const isLoading = ref(false)
-  const articles = ref<Article[]>([])
-
-  const fetchArticles = async () => {
-    isLoading.value = true
-    try {
-      const res: any = await getArticle(true)
-      articles.value = res.data || []
-    } catch (error) {
-      console.error('Error fetching articles:', error)
-    } finally {
-      isLoading.value = false
-    }
-  }
-
-  fetchArticles()
+  const { data, status } = await useAsyncData('articles-list', () => getArticle(true))
+  const articles = computed(() => (data.value?.data as Article[]) || [])
+  const isLoading = computed(() => status.value === 'pending')
 
   const selectedTag = ref('')
   const allTags = computed(() => [...new Set(articles.value.flatMap((a) => a.tags))])

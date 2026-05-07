@@ -51,7 +51,15 @@ export default defineNuxtConfig({
       viewport: 'width=device-width, initial-scale=1',
       title: siteName,
       htmlAttrs: { lang: 'zh-Hant' },
-      link: [{ rel: 'icon', type: 'image/svg+xml', href: '/favicon.svg' }],
+      link: [
+        { rel: 'preconnect', href: 'https://fonts.googleapis.com' },
+        { rel: 'preconnect', href: 'https://fonts.gstatic.com', crossorigin: '' },
+        {
+          rel: 'stylesheet',
+          href: 'https://fonts.googleapis.com/css2?family=Noto+Serif+TC:wght@300;400;500;700&family=Playfair+Display:ital,wght@0,400;0,600;1,400&display=swap'
+        },
+        { rel: 'icon', type: 'image/svg+xml', href: '/favicon.svg' }
+      ],
       meta: [
         { name: 'description', content: siteDescription },
         { property: 'og:site_name', content: siteName },

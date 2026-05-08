@@ -40,6 +40,8 @@
     } catch {}
   })
 
+  const { gtag } = useGtag()
+
   async function submitComment() {
     commentError.value = ''
     const name = commentName.value.trim()
@@ -59,6 +61,10 @@
       commentContent.value = ''
       commentSuccess.value = true
       setTimeout(() => { commentSuccess.value = false }, 3000)
+      gtag('event', 'comment_submit', {
+        article_slug: slug,
+        article_title: article.value?.title ?? ''
+      })
     } catch {
       commentError.value = '送出失敗，請稍後再試'
     } finally {

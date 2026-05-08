@@ -1,8 +1,6 @@
 <script setup lang="ts">
   import { useBlogConfig } from '@/composables/useBlogConfig'
-  import { useAboutApi } from '@/composables/api/useAboutApi'
   import type { AboutData } from '@/types'
-  const { getAbout } = useAboutApi()
   const { buildPageTitle, defaultDescription } = useBlogConfig()
   const { applyPersonSchema } = useSchemas()
   applyPersonSchema()
@@ -17,7 +15,7 @@
     'Severely picky when it comes to what she reads.'
   ])
 
-  const { data: aboutData } = await useAsyncData<AboutData>('about', () => getAbout() as Promise<AboutData>)
+  const { data: aboutData } = await useAsyncData<AboutData>('about', () => $fetch<AboutData>('/api/about'))
 
   message.value = aboutData.value?.message.replace(/\n/g, '<br />') ?? ''
   messageEn.value = aboutData.value?.messageEn.replace(/\n/g, '<br />') ?? ''

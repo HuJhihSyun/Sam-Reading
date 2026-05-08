@@ -1,22 +1,39 @@
 import mongoose from 'mongoose'
 
-export default defineNitroPlugin(async () => {
+let connectionPromise = null
+
+export async function connectDB() {
+  // Already connected
+  if (mongoose.connection.readyState === 1) return
+
+  // Reuse in-progress connection (prevents multiple concurrent connects on cold start)
+  if (connectionPromise) return connectionPromise
+
   const config = useRuntimeConfig()
   const mongodbUri = config.mongodbUri
 
   if (!mongodbUri) {
-    console.warn('MongoDB URI is missing. Please set `MONGODB_URI` in your `.env` file.')
-    return
+    throw new Error('MONGODB_URI is not set. Please configure it in your environment variables.')
   }
 
-  if (mongoose.connection.readyState === 1) return
-
-  try {
-    mongoose.set('strictQuery', true)
-    console.log('MongoDB Connecting...')
-    await mongoose.connect(mongodbUri)
+  mongoose.set('strictQuery', true)
+  connectionPromise = mongoose.connect(mongodbUri).then(() => {
     console.log('MongoDB Connected Successfully!')
+    connectionPromise = null
+  }).catch((e) => {
+    console.error('MongoDB connection error:', e)
+    connectionPromise = null
+    throw e
+  })
+
+  return connectionPromise
+}
+
+// Keep plugin for local dev / traditional server warm start
+export default defineNitroPlugin(async () => {
+  try {
+    await connectDB()
   } catch (e) {
-    console.error('Error MongoDB =>', e)
+    console.error('MongoDB plugin init failed:', e)
   }
 })

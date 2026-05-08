@@ -93,7 +93,7 @@ export default defineNuxtConfig({
   modules: ['nuxt-svgo-loader', '@nuxtjs/sitemap', 'nuxt-gtag'],
 
   gtag: {
-    tags: [{ id: 'G-VXKZVB5GRB' }]
+    id: 'G-VXKZVB5GRB'
   },
 
   nitro: {

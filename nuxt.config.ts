@@ -93,7 +93,7 @@ export default defineNuxtConfig({
   modules: ['nuxt-svgo-loader', '@nuxtjs/sitemap', 'nuxt-gtag'],
 
   gtag: {
-    id: 'G-VXKZVB5GRB' // 替換成您的 Google Analytics 測量 ID
+    tags: [{ id: 'G-VXKZVB5GRB' }]
   },
 
   nitro: {

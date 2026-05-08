@@ -90,16 +90,11 @@ export default defineNuxtConfig({
     '/api/about': { cache: { maxAge: 60 * 60 } }
   },
 
-  modules: [
-    'nuxt-svgo-loader',
-    '@nuxtjs/sitemap',
-    [
-      'nuxt-gtag',
-      {
-        id: 'G-VXKZVB5GRB' // 替換成您的 Google Analytics 測量 ID
-      }
-    ]
-  ],
+  modules: ['nuxt-svgo-loader', '@nuxtjs/sitemap', 'nuxt-gtag'],
+
+  gtag: {
+    id: 'G-VXKZVB5GRB' // 替換成您的 Google Analytics 測量 ID
+  },
 
   nitro: {
     preset: 'vercel',

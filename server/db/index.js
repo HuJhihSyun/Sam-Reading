@@ -16,8 +16,15 @@ export async function connectDB() {
     throw new Error('MONGODB_URI is not set. Please configure it in your environment variables.')
   }
 
+  // heartbeatFrequencyMS: 10000 — 每 10 秒 ping 一次 Atlas，讓 Mongoose 能即時偵測到連線已斷，主動重連，不會誤以為 readyState === 1
+  // serverSelectionTimeoutMS: 10000 — 選擇可用伺服器的等待上限，避免永久卡住
+  // socketTimeoutMS: 30000 — 單次操作的 TCP 逾時，給重連足夠時間
   mongoose.set('strictQuery', true)
-  connectionPromise = mongoose.connect(mongodbUri).then(() => {
+  connectionPromise = mongoose.connect(mongodbUri, {
+    serverSelectionTimeoutMS: 10000,
+    socketTimeoutMS: 30000,
+    heartbeatFrequencyMS: 10000,
+  }).then(() => {
     console.log('MongoDB Connected Successfully!')
     connectionPromise = null
   }).catch((e) => {

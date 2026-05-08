@@ -92,10 +92,6 @@ export default defineNuxtConfig({
 
   modules: ['nuxt-svgo-loader', '@nuxtjs/sitemap', 'nuxt-gtag'],
 
-  gtag: {
-    id: 'G-VXKZVB5GRB'
-  },
-
   nitro: {
     preset: 'vercel',
     plugins: ['~~/server/db/index.js']

@@ -42,6 +42,56 @@
 
   const { gtag } = useGtag()
 
+  const pageUrl = computed(() => {
+    if (import.meta.server) return ''
+    return window.location.href
+  })
+
+  const shareOptions = computed(() => [
+    {
+      id: 'facebook',
+      label: 'Facebook',
+      href: `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(pageUrl.value)}`,
+      icon: `<path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"/>`
+    },
+    {
+      id: 'x',
+      label: 'X',
+      href: `https://twitter.com/intent/tweet?text=${encodeURIComponent(article.value?.title ?? '')}&url=${encodeURIComponent(pageUrl.value)}`,
+      icon: `<path d="M4 4l16 16M4 20 20 4"/>`
+    },
+    {
+      id: 'line',
+      label: 'LINE',
+      href: `https://social-plugins.line.me/lineit/share?url=${encodeURIComponent(pageUrl.value)}`,
+      icon: `<path d="M22 10c0-4.42-4.48-8-10-8S2 5.58 2 10c0 3.99 3.35 7.37 7.87 7.89.31.07.73.2.83.47.1.24.07.61.03.85l-.13.81c-.04.24-.18.94.82.51 1-.42 5.4-3.18 7.37-5.44C20.93 13.45 22 11.83 22 10z"/>`
+    }
+  ])
+
+  const copied = ref(false)
+
+  function openShare(option: { id: string; href: string }) {
+    window.open(option.href, '_blank', 'width=600,height=460,noopener,noreferrer')
+    gtag('event', 'share', {
+      method: option.id,
+      content_type: 'article',
+      item_id: slug
+    })
+  }
+
+  async function copyLink() {
+    try {
+      await navigator.clipboard.writeText(pageUrl.value)
+      copied.value = true
+      setTimeout(() => { copied.value = false }, 2000)
+      gtag('event', 'share', {
+        method: 'copy_link',
+        content_type: 'article',
+        item_id: slug
+      })
+    } catch {}
+  }
+
   async function submitComment() {
     commentError.value = ''
     const name = commentName.value.trim()
@@ -183,6 +233,31 @@
             </div>
             <p class="text-center text-xs text-mauve-300 tracking-widest">感謝閱讀</p>
 
+            <!-- ── Share ─────────────────────────────────── -->
+            <div class="flex items-center justify-end gap-2 mt-2">
+              <span class="text-[10px] tracking-widest text-mauve-300 uppercase">分享</span>
+              <button
+                v-for="opt in shareOptions"
+                :key="opt.id"
+                :title="opt.label"
+                class="w-7 h-7 flex items-center justify-center rounded-full border border-petal-200 text-mauve-400 hover:text-petal-500 hover:border-petal-400 transition-colors cursor-pointer"
+                @click="openShare(opt)"
+              >
+                <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" v-html="opt.icon" />
+              </button>
+              <button
+                :title="copied ? '已複製！' : '複製連結'"
+                class="w-7 h-7 flex items-center justify-center rounded-full border transition-colors cursor-pointer"
+                :class="copied ? 'border-emerald-300 text-emerald-400' : 'border-petal-200 text-mauve-400 hover:text-petal-500 hover:border-petal-400'"
+                @click="copyLink"
+              >
+                <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                  <rect x="9" y="9" width="13" height="13" rx="2" ry="2"/>
+                  <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
+                </svg>
+              </button>
+            </div>
+
             <!-- ── Comments ──────────────────────────────── -->
             <section class="mt-8">
               <!-- Comment form -->
@@ -213,7 +288,7 @@
                   <span v-else />
                   <button
                     :disabled="commentSubmitting"
-                    class="px-5 py-2 text-xs bg-petal-400 hover:bg-petal-500 disabled:opacity-50 text-white rounded-lg transition-colors tracking-wide"
+                    class="px-5 py-2 text-xs bg-petal-400 hover:bg-petal-500 disabled:opacity-50 text-white rounded-lg transition-colors tracking-wide cursor-pointer"
                     @click="submitComment"
                   >
                     {{ commentSubmitting ? '送出中…' : '送出留言' }}
